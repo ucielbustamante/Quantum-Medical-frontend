@@ -1,10 +1,19 @@
 import { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Form } from './components/form';
+import { PageAdmin } from './components/pageAdmin';
+import { Turnos } from './components/turnos';
+import { Medicos } from './components/medicos';
 function App() {
   return (
-  <div className="App">
-    <Form/>
-  </div> )
+  <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<Form />} />
+        <Route path="/admin" element={<PageAdmin />}/>
+        <Route path='/turnos' element={<Turnos />} />
+        <Route path='/medicos' element={<Medicos />} />
+      </Routes>
+  </BrowserRouter> )
   // const [message, setMessage] = useState('');
 
   // useEffect(() => {
