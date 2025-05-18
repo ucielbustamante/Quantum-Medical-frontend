@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import {GoogleLoginButton} from './buttonGoogleLogin';
 
 export function Form() {
  
@@ -47,31 +48,31 @@ export function Form() {
       }}>
         <div className="card-body p-4">
           <form onSubmit={handleSubmit}>
-            <div className="mb-4 p-2">
+            <div className="mb-4">
               <input 
                 type="text" 
-                className="form-control form-control-sm form-control-sm bg-light mb-2"
+                className="form-control bg-light mb-2"
                 placeholder="USUARIO"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                style={{ border: "none" }}
+                style={{ width: '400px', margin: '0 auto' }}
               />
             </div>
             
-            <div className="mb-4 p-2">
+            <div className="mb-4 p-4">
               <input 
                 type="password" 
-                className="form-control form-control-sm form-control-sm bg-light"
+                className="form-control bg-light"
                 placeholder="CONTRASEÑA"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                style={{ border: "none" }}
+                style={{ width: '400px', margin: '0 auto' }}
               />
             </div>
             
             <div className="d-grid gap-3 d-md-flex justify-content-md-center">
               <button 
-                className="btn btn-sm p-3"
+                className="btn p-3"
                 type="submit"
                 style={{ 
                   backgroundColor: "#075269", 
@@ -81,6 +82,7 @@ export function Form() {
               >
                 INGRESAR
               </button>
+               <GoogleLoginButton/>
             </div>
           </form>
         </div>
