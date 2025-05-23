@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Form } from './components/form';
 import { PageAdmin } from './components/pageAdmin';
 import { Turnos } from './components/turnos';
@@ -8,6 +8,7 @@ function App() {
   return (
   <BrowserRouter>
       <Routes>
+        <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Form />} />
         <Route path="/admin" element={<PageAdmin />}/>
         <Route path='/turnos' element={<Turnos />} />
