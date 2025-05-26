@@ -1,0 +1,35 @@
+.navbar {
+  background-color: #86b9eda3;
+  padding: 1rem;
+}
+
+.navList {
+  display: flex;
+  justify-content: flex-end;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.navItem {
+  margin: 0 1rem;
+  font-size: 1.5rem;
+}
+
+.navLink {
+  color: white;
+  text-decoration: none;
+}
+
+.navLink:hover {
+  text-decoration: underline;
+}
+
+.submitButton {
+  all: unset;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  user-select: none;
+}

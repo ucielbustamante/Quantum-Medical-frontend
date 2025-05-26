@@ -1,14 +1,14 @@
 import { PageAdmin } from "./pageAdmin"
 import { Card } from "./card"
 
-export function Medicos() {
+export function Especialidad() {
     return (
         <PageAdmin>
             <h1 className=' text-center'style={{
-                color: 'white',
+                color: 'black',
                 marginTop: '40px'
-            }}>Medicos</h1>
-            <button className="btn">Agregar Médico</button>
+            }}>Especialidad</h1>
+            <button className="btn">Agregar Especialidad</button>
             <div className="container mt-4">
                 <div className="row justify-content-center g-4">
                     <div className="col-md-3">

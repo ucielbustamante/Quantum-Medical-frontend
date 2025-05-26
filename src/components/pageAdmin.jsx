@@ -1,14 +1,15 @@
-import {Nav} from './Nav';
+import { PageLayout } from './pageLayouts'
 
-export function PageAdmin({children}){
-    return(
-        <div className="d-flex flex-column" style={{ 
-           minHeight: "100vh", 
-           background: "linear-gradient(180deg, #004257 0%, #006994 100%)"
-         }}>
-            <Nav/>
-            <div className="flex-grow-1">{children}</div>
-        </div>
+const linksAdmin = [
+  { label: "Turnos", to: "/turnos" },
+  { label: "Médicos", to: "/medicos" },
+  { label: "Especialidad", to: "/especialidad" },
+]
 
-    )
+export function PageAdmin({ children }) {
+  return (
+    <PageLayout links={linksAdmin} onLogout={() => console.log("cerrar sesión")}>
+      {children}
+    </PageLayout>
+  )
 }

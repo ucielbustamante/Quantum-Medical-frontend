@@ -1,13 +1,20 @@
-export function Card() {
-    return(
-        <div className="card" style={{width: '18rem'}}>
-            <div className="card-body">
-                <h5 className="card-title">Nombre apellido paciente</h5>
-                <h6 className="card-subtitle mb-2 text-muted">Especialidad</h6>
-                <p className="card-text">Detalles del turno</p>
-                <p className="card-text">fecha</p>
-                <a href="#" className="card-link">Medico</a>
-            </div>
-        </div>
-    )
+import styles from '../styles/card.module.css'
+
+export function Card({ title, subtitle, content = [], link }) {
+  return (
+    <div className={styles.card}>
+      {title && <h5 className={styles.cardTitle}>{title}</h5>}
+      {subtitle && <h6 className={styles.cardSubtitle}>{subtitle}</h6>}
+      
+      {content.map((linea, index) => (
+        <p key={index}>{linea}</p>
+      ))}
+
+      {link && (
+        <a href={link.href} className={styles.cardLink}>
+          {link.text}
+        </a>
+      )}
+    </div>
+  )
 }
