@@ -9,6 +9,7 @@ import { Especialidad } from './components/especialidad';
 import { NuevoMedico } from './pages/newMedic';
 import { SacarTurno } from './pages/newAppointment';
 import { MisTurnos } from './pages/appointmentPatient';
+import { PagePatients } from './components/pagePatients';
 function App() {
   return (
   <BrowserRouter>
@@ -24,6 +25,8 @@ function App() {
         <Route path="/especialidad" element={<Especialidad />} />
         <Route path="/formulario-medico" element={<NuevoMedico />} />
 
+        {/* esta ruta aun no tiene contenido */}
+        <Route path='/patient/dashboard' element={<PagePatients />}/>
         {/* para que el paciente saque turno */}
         <Route path="/newAppointment" element={<SacarTurno />} />
         <Route path="/mis-turnos" element={<MisTurnos />} />

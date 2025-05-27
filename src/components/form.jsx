@@ -1,21 +1,62 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {GoogleLoginButton} from './buttonGoogleLogin';
 import styles from '../styles/form.module.css';
 
 export function Form() {
-
-  const [username, setUsername] = useState('');
+  const navigate = useNavigate();
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    setLoading(true);
 
-    if (!username || !password) {
-      alert('Por favor, completa el usuario y la contraseña.');
+    if (!email || !password) {
+      setError('Por favor, completa el correo y la contraseña.');
+      setLoading(false);
       return;
     }
 
-    console.log('Formulario enviado:', { username, password });
+    try {
+    const response = await fetch('http://localhost:5000/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+    },
+      body: JSON.stringify({ email, password })
+    });
+
+    console.log('Formulario enviado:', { email, password });
+
+    const data = await response.json();
+    console.log('data',data);
+    
+    if (!response.ok) {
+      setError(data?.data?.message || 'Credenciales inválidas.');
+    } else {
+      localStorage.setItem('token', data.data.accessToken);
+      console.log('Login exitoso:', data.data);
+      // navigate('/dashboard');
+
+      if (data.data.role === 'Admin') {
+        navigate('/admin');
+      } else if (data.data.role === 'Patient'){
+        //aun no tiene nada
+        navigate('/patient/dashboard');
+      }
+    
+    }
+    } catch (err) {
+      console.error('Error de red:', err);
+      setError('Error al conectar con el servidor.');
+    } finally {
+      setLoading(false);
+    }
+
   };
 
   return (
@@ -36,13 +77,14 @@ export function Form() {
         <h3 className={styles.title}>Iniciar sesión</h3>
         <div className={styles.cardBody}>
           <form onSubmit={handleSubmit}>
+            {error && <div className={styles.errorMessage}>{error}</div>}
             <div className={styles.inputGroup}>
               <input
                 type="text"
                 className={`form-control ${styles.inputField}`} // Acá se combina Bootstrap y el css
-                placeholder="Usuario"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Correo Electronico"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
 

@@ -107,3 +107,10 @@
   background-color: #075269;
   border: 2px solid #0d4b5f;
 }
+
+.errorMessage {
+  color: red;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  text-align: center;
+}

@@ -1,7 +1,13 @@
 import { Link } from "react-router-dom"
 import styles from '../styles/nav.module.css'
+import { useNavigate } from 'react-router-dom';
+import { logout } from '../utils/logout';
 
-export function Nav({ links = [], onLogout }) {
+export function Nav({ links = [] }) {
+  const navigate = useNavigate();
+
+  const handleLogout = () => logout(navigate);
+
   return (
     <nav className={styles.navbar}>
       <ul className={styles.navList}>
@@ -18,7 +24,7 @@ export function Nav({ links = [], onLogout }) {
         ))}
 
         <li className={styles.navItem}>
-          <button onClick={onLogout} className={styles.submitButton}>
+          <button onClick={handleLogout} className={styles.submitButton}>
             Cerrar sesión
           </button>
         </li>
