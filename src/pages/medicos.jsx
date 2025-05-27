@@ -30,6 +30,12 @@ export function Medicos() {
         </Link>
       </div>
 
+      <div className="d-flex justify-content-end me-4 mb-3">
+        <Link to="/email">
+          <button className="btn btn-secondary">Buscar Médico</button>
+        </Link>
+      </div>
+
       <div className="container mt-4">
         <div className="row justify-content-center g-4">
           {medicosEjemplo.map((medico, index) => (
