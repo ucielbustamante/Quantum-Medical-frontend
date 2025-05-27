@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Form } from './components/form';
+import { PrivateRoute } from './components/PrivateRoute';
 import { PageLayout } from './components/pageLayouts';
 import { PageAdmin } from './components/pageAdmin';
 import { Turnos } from './pages/turnos';
@@ -10,6 +11,8 @@ import { NuevoMedico } from './pages/newMedic';
 import { SacarTurno } from './pages/newAppointment';
 import { MisTurnos } from './pages/appointmentPatient';
 import { PagePatients } from './components/pagePatients';
+import { NewEspecialty } from './pages/newEspecialities';
+import { FindDoctorByEmail } from './components/FindDoctorByEmail';
 function App() {
   return (
   <BrowserRouter>
@@ -24,6 +27,22 @@ function App() {
         <Route path="/medicos" element={<Medicos />} />
         <Route path="/especialidad" element={<Especialidad />} />
         <Route path="/formulario-medico" element={<NuevoMedico />} />
+        <Route
+          path="/specialities/"
+          element={
+            <PrivateRoute allowedRoles={["Admin"]}>
+              <NewEspecialty />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/email/"
+          element={
+            <PrivateRoute allowedRoles={["Admin"]}>
+              <FindDoctorByEmail />
+            </PrivateRoute>
+          }
+        />
 
         {/* esta ruta aun no tiene contenido */}
         <Route path='/patient/dashboard' element={<PagePatients />}/>
