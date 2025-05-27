@@ -39,8 +39,8 @@ export function Form() {
       setError(data?.data?.message || 'Credenciales inválidas.');
     } else {
       localStorage.setItem('token', data.data.accessToken);
+      localStorage.setItem("rol", data.rol);
       console.log('Login exitoso:', data.data);
-      // navigate('/dashboard');
 
       if (data.data.role === 'Admin') {
         navigate('/admin');

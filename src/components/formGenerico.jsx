@@ -1,6 +1,6 @@
 import styles from "../styles/formsGeneral.module.css"
 
-export function FormGenerico({ campos, onSubmit, titulo }) {
+export function FormGenerico({ campos, onSubmit, titulo, botonTexto = "Guardar" }) {
     return (
         <form onSubmit={onSubmit} className={styles.container}>
             <h2 style={{ marginBottom: '1rem' }}>{titulo}</h2>
@@ -40,7 +40,7 @@ export function FormGenerico({ campos, onSubmit, titulo }) {
                 ))}
             </div>
 
-            <button type="submit" className={`btn btn-primary ${styles.submitButton}`}>Guardar</button>
+            <button type="submit" className={`btn btn-primary ${styles.submitButton}`}>{botonTexto}</button>
         </form>
     )
 }
