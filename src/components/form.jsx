@@ -45,7 +45,6 @@ export function Form() {
       if (data.data.role === 'Admin') {
         navigate('/dashboard-admin');
       } else if (data.data.role === 'Patient'){
-        //aun no tiene nada
         navigate('/patient/dashboard');
       }
     

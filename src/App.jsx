@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Form } from './components/form';
 import { AdminRoutes } from "./routes/adminRoutes";
 import { PagePatients } from "./components/pagePatients";
+import { DashboardPatients } from './pages/dashboardPatients';
 import { SacarTurno } from "./pages/newAppointment";
 import { MisTurnos } from "./pages/appointmentPatient";
 function App() {
@@ -16,7 +17,7 @@ function App() {
         <>{AdminRoutes()}</>
 
         {/* esta ruta aun no tiene contenido */}
-        <Route path='/patient/dashboard' element={<PagePatients />}/>
+        <Route path='/patient/dashboard' element={<DashboardPatients />}/>
         {/* para que el paciente saque turno */}
         <Route path="/newAppointment" element={<SacarTurno />} />
         <Route path="/mis-turnos" element={<MisTurnos />} />
