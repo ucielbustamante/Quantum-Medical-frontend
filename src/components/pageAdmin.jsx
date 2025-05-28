@@ -1,6 +1,7 @@
 import { PageLayout } from './pageLayouts'
 
 const linksAdmin = [
+  { label: "Inicio", to: "/dashboard-admin"},
   { label: "Turnos", to: "/turnos" },
   { label: "Médicos", to: "/medicos" },
   { label: "Especialidad", to: "/especialidad" },
