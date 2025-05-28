@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { apiRequest } from "../services/apiConection"
 import { PageAdmin } from "./pageAdmin";
 import { Card } from "./card";
 
@@ -11,14 +12,8 @@ export function Especialidad() {
   useEffect(() => {
     const fetchSpecialties = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/specialties");
-        const result = await response.json();
-
-        if (!response.ok) {
-          throw new Error(result?.data?.message || "Error desconocido");
-        }
-
-        setSpecialties(result.data); // acá accedemos a `data.data`
+        const result = await apiRequest("/specialties");
+        setSpecialties(result.data);
       } catch (err) {
         setError("Error al cargar las especialidades.");
         console.error(err);

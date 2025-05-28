@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { apiRequest } from "../services/apiConection";
 import { FormGenerico } from "../components/formGenerico"
 import { PageAdmin } from "../components/pageAdmin"
 
@@ -22,23 +23,10 @@ export function NewEspecialty() {
             const token = localStorage.getItem("token");
 
             try {
-                const res = await fetch("http://localhost:5000/api/specialties", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
-                    },
-                    body: JSON.stringify({ name })
-                });
+                const data = await apiRequest("/specialties", "POST", { name }, token);
 
-                const data = await res.json();
-
-                if (res.ok) {
-                    setMensaje(`Especialidad creada: ${data?.data?.name}`);
-                    setName("");
-                } else {
-                    setMensaje(data?.data?.message || "Error al crear especialidad");
-                }
+                setMensaje(`Especialidad creada: ${data?.data?.name}`);
+                setName("");
             } catch (err) {
                 console.error(err);
                 setMensaje("Error al conectar con el servidor");

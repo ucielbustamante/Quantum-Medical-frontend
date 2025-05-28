@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { apiRequest} from "../services/apiConection"
 import { PageAdmin } from "./pageAdmin";
 import { FormGenerico } from "./formGenerico";
 import { Card } from "./card";
@@ -12,14 +13,8 @@ export function FindDoctorByEmail() {
     e.preventDefault();
 
     try {
-      const response = await fetch(`http://localhost:5000/api/doctors/email/${encodeURIComponent(email)}`);
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data?.data?.message || "Error al buscar doctor");
-      }
-
-      const result = await response.json();
+      const token = localStorage.getItem("token");
+      const result = await apiRequest(`/doctors/email/${encodeURIComponent(email)}`, "GET", null, token);
       setDoctor(result.data.doctor);
       setError("");
     } catch (err) {
