@@ -1,18 +1,9 @@
-import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Form } from './components/form';
-import { PrivateRoute } from './components/PrivateRoute';
-import { PageLayout } from './components/pageLayouts';
-import { PageAdmin } from './components/pageAdmin';
-import { Turnos } from './pages/turnos';
-import { Medicos } from './pages/medicos';
-import { Especialidad } from './components/especialidad';
-import { NuevoMedico } from './pages/newMedic';
-import { SacarTurno } from './pages/newAppointment';
-import { MisTurnos } from './pages/appointmentPatient';
-import { PagePatients } from './components/pagePatients';
-import { NewEspecialty } from './pages/newEspecialities';
-import { FindDoctorByEmail } from './components/FindDoctorByEmail';
+import { AdminRoutes } from "./routes/adminRoutes";
+import { PagePatients } from "./components/pagePatients";
+import { SacarTurno } from "./pages/newAppointment";
+import { MisTurnos } from "./pages/appointmentPatient";
 function App() {
   return (
   <BrowserRouter>
@@ -21,28 +12,8 @@ function App() {
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Form />} />
        
-       {/* paginas de admin */}
-        <Route path="/admin" element={<Navigate to="/turnos" />} />
-        <Route path="/turnos" element={<Turnos />} />
-        <Route path="/medicos" element={<Medicos />} />
-        <Route path="/especialidad" element={<Especialidad />} />
-        <Route path="/formulario-medico" element={<NuevoMedico />} />
-        <Route
-          path="/specialities/"
-          element={
-            <PrivateRoute allowedRoles={["Admin"]}>
-              <NewEspecialty />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/email/"
-          element={
-            <PrivateRoute allowedRoles={["Admin"]}>
-              <FindDoctorByEmail />
-            </PrivateRoute>
-          }
-        />
+       {/* Rutas Admin */}
+        <>{AdminRoutes()}</>
 
         {/* esta ruta aun no tiene contenido */}
         <Route path='/patient/dashboard' element={<PagePatients />}/>
