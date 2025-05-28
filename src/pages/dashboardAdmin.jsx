@@ -1,0 +1,53 @@
+import { PageAdmin } from "../components/pageAdmin";
+import { Card } from "../components/card";
+
+export function DashboardAdmin() {
+  return (
+    <PageAdmin>
+      <h1 className="text-center" style={{ color: "black", marginTop: "40px" }}>
+        Dashboard Admin
+      </h1>
+
+      <div className="container mt-4">
+        <div className="row justify-content-center g-4">
+          
+            <div className="col-md-3">
+              <Card
+                title="Usuarios"
+                subtitle="Gestionar cuentas de usuarios"
+                content={[
+                  "Crear, editar o eliminar usuarios",
+                  "Ver roles asignados",
+                  
+                ]}
+                link={{ href: "/users/all-users", text: "Entrar" }}
+              />
+            </div>
+            <div className="col-md-3">
+              <Card
+                title="Turnos"
+                subtitle="Revisión de citas médicas"
+                content={[
+                  "Control de turnos asignados",
+                  "Filtrar por médico o fecha"
+                ]}
+                link={{ href: "/turnos", text: "Entrar" }}
+              />
+            </div>
+            <div className="col-md-3">
+              <Card
+                title="Medicos"
+                subtitle="Listado de profesionales registrados"
+                content={[
+                  "Ver médicos por especialidad",
+                  "Editar, eliminar o inhabilitar médicos"
+                ]}
+                link={{ href: "/medicos", text: "Entrar" }}
+              />
+            </div>
+          
+        </div>
+      </div>
+    </PageAdmin>
+  );
+}
