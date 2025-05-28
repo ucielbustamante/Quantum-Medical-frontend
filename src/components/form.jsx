@@ -43,7 +43,7 @@ export function Form() {
       console.log('Login exitoso:', data.data);
 
       if (data.data.role === 'Admin') {
-        navigate('/admin');
+        navigate('/dashboard-admin');
       } else if (data.data.role === 'Patient'){
         //aun no tiene nada
         navigate('/patient/dashboard');
