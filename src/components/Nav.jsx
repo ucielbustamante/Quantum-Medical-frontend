@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom"
-import styles from '../styles/nav.module.css'
+import React from 'react'; 
+import { Link } from "react-router-dom";
+import styles from '../styles/nav.module.css'; 
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../utils/logout';
 
@@ -10,6 +11,10 @@ export function Nav({ links = [] }) {
 
   return (
     <nav className={styles.navbar}>
+      <div className={styles.welcomeSection}>
+        <span className={styles.welcomeMessage}>Bienvenido</span>
+      </div>
+
       <ul className={styles.navList}>
         {links.map((link, index) => (
           <li key={index} className={styles.navItem}>
@@ -30,5 +35,5 @@ export function Nav({ links = [] }) {
         </li>
       </ul>
     </nav>
-  )
+  );
 }
