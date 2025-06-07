@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {GoogleLoginButton} from './buttonGoogleLogin';
+import { apiRequest } from '../services/apiConection';
 import styles from '../styles/form.module.css';
 
 export function Form() {
@@ -22,25 +23,16 @@ export function Form() {
     }
 
     try {
-    const response = await fetch('http://localhost:5000/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-    },
-      body: JSON.stringify({ email, password })
-    });
+    const data = await apiRequest('/api/auth/login', 'POST', { email, password });
 
     console.log('Formulario enviado:', { email, password });
 
-    const data = await response.json();
     console.log('data',data);
     
-    if (!response.ok) {
-      setError(data?.data?.message || 'Credenciales inválidas.');
-    } else {
-      localStorage.setItem('token', data.data.accessToken);
-      localStorage.setItem("rol", data.rol);
-      console.log('Login exitoso:', data.data);
+    localStorage.setItem('token', data.data.accessToken);
+    localStorage.setItem('rol', data.data.role);
+
+    console.log('Login exitoso:', data.data);
 
       if (data.data.role === 'Admin') {
         navigate('/dashboard-admin');
@@ -48,11 +40,11 @@ export function Form() {
         navigate('/patient/dashboard');
       }
     
-    }
-    } catch (err) {
-      console.error('Error de red:', err);
-      setError('Error al conectar con el servidor.');
-    } finally {
+  } catch (err) {
+    console.error('Error de red:', err);
+    setError(err.message || 'Error al conectar con el servidor.');
+  }
+ finally {
       setLoading(false);
     }
 
