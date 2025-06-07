@@ -7,7 +7,7 @@ export function NewUser() {
   const [name, setName] = useState("")
   const [lastname, setLastname] = useState("")
   const [email, setEmail] = useState("")
-  const [password_hash, setPassword] = useState("")
+  const [password, setPassword] = useState("")
   const [dni, setDni] = useState("")
   const [role, setRole] = useState("")
   const [mensaje, setMensaje] = useState("")
@@ -16,7 +16,7 @@ export function NewUser() {
     { label: "Nombre", type: "text", name: "name", value: name, onChange: (e) => setName(e.target.value) },
     { label: "Apellido", type: "text", name: "lastname", value: lastname, onChange: (e) => setLastname(e.target.value) },
     { label: "Email", type: "email", name: "email", value: email, onChange: (e) => setEmail(e.target.value) },
-    { label: "Contraseña", type: "password", name: "password_hash", value: password_hash, onChange: (e) => setPassword(e.target.value) },
+    { label: "Contraseña", type: "password", name: "password", value: password, onChange: (e) => setPassword(e.target.value) },
     { label: "DNI", type: "text", name: "dni", value: dni, onChange: (e) => setDni(e.target.value) },
     {
       label: "Rol",
@@ -38,7 +38,7 @@ export function NewUser() {
         name,
         lastname,
         email,
-        password_hash,
+        password,
         dni,
         role
       }, token)
