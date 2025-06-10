@@ -31,14 +31,16 @@ export function Form() {
     
     localStorage.setItem('token', data.data.accessToken);
     localStorage.setItem('rol', data.data.role);
+    localStorage.setItem('userName', data.data.name);
+    localStorage.setItem('userLastName', data.data.lastname);
 
-    console.log('Login exitoso:', data.data);
+    console.log('Login y perfil exitoso. Nombre:', data.data.name, 'Apellido:', data.data.lastname);
 
-      if (data.data.role === 'Admin') {
-        navigate('/dashboard-admin');
-      } else if (data.data.role === 'Patient'){
-        navigate('/patient/dashboard');
-      }
+    if (data.data.role === 'Admin') {
+      navigate('/dashboard-admin');
+    } else if (data.data.role === 'Patient'){
+      navigate('/patient/dashboard');
+    }
     
   } catch (err) {
     console.error('Error de red:', err);
@@ -48,6 +50,11 @@ export function Form() {
       setLoading(false);
     }
 
+  };
+
+   
+  const handleForgotPassword = () => {
+    navigate('/forgot-password'); 
   };
 
   return (
@@ -98,6 +105,15 @@ export function Form() {
               </button>
             </div>
           </form>
+          <div className={styles.buttonGroup}>
+            <button
+              className={styles.submitButton}
+              type="button" 
+              onClick={handleForgotPassword} 
+            >
+              Olvidé mi contraseña
+            </button>
+          </div>
           <div className={styles.buttonGroup}>
             <GoogleLoginButton />
           </div>
