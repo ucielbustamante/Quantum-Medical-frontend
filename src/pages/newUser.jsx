@@ -34,7 +34,7 @@ export function NewUser() {
     const token = localStorage.getItem("token")
 
     try {
-      await apiRequest("/users", "POST", {
+      await apiRequest("/api/users", "POST", {
         name,
         lastname,
         email,

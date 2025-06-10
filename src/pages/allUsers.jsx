@@ -12,7 +12,10 @@ export function AllUsers() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const result = await apiRequest("/users");
+        const token = localStorage.getItem("token")
+        const result = await apiRequest("/api/users/search", "POST", {
+          limit: 100
+        }, token)
         setUsers(result.data); 
       } catch (err) {
         setError("Error al cargar los usuarios.");
