@@ -1,10 +1,13 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Form } from './components/form';
+import { ForgotPasswordPage } from './pages/forgotPassword';
+import { ResetPasswordForm } from './components/resetPasswordForm';
 import { AdminRoutes } from "./routes/adminRoutes";
 import { PagePatients } from "./components/pagePatients";
 import { DashboardPatients } from './pages/dashboardPatients';
 import { SacarTurno } from "./pages/newAppointment";
 import { MisTurnos } from "./pages/appointmentPatient";
+
 function App() {
   return (
   <BrowserRouter>
@@ -12,7 +15,9 @@ function App() {
         {/* pagina gral para todos */}
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Form />} />
-       
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordForm />} /> 
+
        {/* Rutas Admin */}
         <>{AdminRoutes()}</>
 
