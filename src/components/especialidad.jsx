@@ -12,7 +12,7 @@ export function Especialidad() {
   useEffect(() => {
     const fetchSpecialties = async () => {
       try {
-        const result = await apiRequest("/specialties");
+        const result = await apiRequest("/api/specialties");
         setSpecialties(result.data);
       } catch (err) {
         setError("Error al cargar las especialidades.");
@@ -46,8 +46,8 @@ export function Especialidad() {
             <div className="col-md-3" key={item.id}>
                 {/* en esta card podria redirigir a medicos asociados de la especialidad tal vez */}
               <Card
-                title="Especialidad"
-                subtitle={item.name}
+                title={item.name}
+                //subtitle=
                 content={[]}
                 link={{
                   href: `/specialities/${item.id}`,

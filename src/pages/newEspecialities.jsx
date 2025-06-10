@@ -23,7 +23,7 @@ export function NewEspecialty() {
             const token = localStorage.getItem("token");
 
             try {
-                const data = await apiRequest("/specialties", "POST", { name }, token);
+                const data = await apiRequest("/api/specialties", "POST", { name }, token);
 
                 setMensaje(`Especialidad creada: ${data?.data?.name}`);
                 setName("");
