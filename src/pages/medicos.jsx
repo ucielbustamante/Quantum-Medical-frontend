@@ -1,21 +1,22 @@
 import { useEffect, useState } from "react";
-import { Card } from "../components/card"
-import { Link } from "react-router-dom"
-import { PageAdmin } from "../components/pageAdmin"
-import { apiRequest } from "../services/apiConection"
+import { Card } from "../components/card";
+import { Link } from "react-router-dom";
+import { PageAdmin } from "../components/pageAdmin";
+import { apiRequest } from "../services/apiConection";
 
 export function Medicos() {
-  const [medicos, setMedicos] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState("")
+  const [medicos, setMedicos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchMedicos = async () => {
       try {
-        const token = localStorage.getItem("token")
+        const token = localStorage.getItem("token");
         const result = await apiRequest("/api/doctors/search", "POST", {
-          limit: 100
-        }, token)
+          limit: 100,
+        }, token);
 
         const medicosProcesados = result.data.map((doc) => ({
           id: doc.id,
@@ -24,19 +25,33 @@ export function Medicos() {
           email: `${doc.User.email}`,
           dni: `${doc.User.dni}`,
           matricula: doc.license_number || "Sin matrícula",
-        }))
+        }));
 
-        setMedicos(medicosProcesados)
+        setMedicos(medicosProcesados);
       } catch (err) {
-        setError("Error al cargar los médicos.")
-        console.error(err)
+        setError("Error al cargar los médicos.");
+        console.error(err);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchMedicos()
-  }, [])
+    fetchMedicos();
+  }, []);
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+  };
+
+  const medicosFiltrados = medicos.filter((medico) =>
+    medico.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    medico.especialidad.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    medico.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <PageAdmin>
@@ -44,25 +59,27 @@ export function Medicos() {
         Médicos
       </h1>
 
-      <div className="d-flex justify-content-end me-4 mb-3">
-        <Link to="/formulario-medico">
-          <button className="btn btn-secondary m-1">Agregar Médico</button>
-        </Link>
-        <Link to="/email">
-          <button className="btn btn-secondary m-1">Buscar Médico</button>
-        </Link>
-      </div>
-
-      {/* <div className="d-flex justify-content-end me-4 mb-3">
-        
-      </div> */}
-
       <div className="container mt-4 mb-4">
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <form className="form-inline" onSubmit={handleSearchSubmit}>
+            <input
+              className="form-control"
+              type="search"
+              placeholder="Buscar"
+              aria-label="Buscar"
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+          </form>
+          <Link to="/formulario-medico">
+            <button className="btn btn-secondary">Agregar Médico</button>
+          </Link>
+        </div>
         {loading && <p>Cargando médicos...</p>}
         {error && <p className="text-danger">{error}</p>}
 
         <div className="row justify-content-center g-4">
-          {medicos.map((medico) => (
+          {medicosFiltrados.map((medico) => (
             <div className="col-md-3" key={medico.id}>
               <Card
                 title={medico.nombre}
@@ -79,5 +96,5 @@ export function Medicos() {
         </div>
       </div>
     </PageAdmin>
-  )
+  );
 }
