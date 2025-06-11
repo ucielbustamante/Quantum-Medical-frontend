@@ -19,8 +19,10 @@ export function Medicos() {
 
         const medicosProcesados = result.data.map((doc) => ({
           id: doc.id,
-          nombre: `Dr/a. ${doc.User.name} ${doc.User.lastname}`,
+          nombre: `${doc.User.name} ${doc.User.lastname}`,
           especialidad: doc.Specialties?.[0]?.name || "Sin especialidad",
+          email: `${doc.User.email}`,
+          dni: `${doc.User.dni}`,
           matricula: doc.license_number || "Sin matrícula",
         }))
 
@@ -44,17 +46,18 @@ export function Medicos() {
 
       <div className="d-flex justify-content-end me-4 mb-3">
         <Link to="/formulario-medico">
-          <button className="btn btn-secondary">Agregar Médico</button>
+          <button className="btn btn-secondary m-1">Agregar Médico</button>
         </Link>
-      </div>
-
-      <div className="d-flex justify-content-end me-4 mb-3">
         <Link to="/email">
-          <button className="btn btn-secondary">Buscar Médico</button>
+          <button className="btn btn-secondary m-1">Buscar Médico</button>
         </Link>
       </div>
 
-      <div className="container mt-4">
+      {/* <div className="d-flex justify-content-end me-4 mb-3">
+        
+      </div> */}
+
+      <div className="container mt-4 mb-4">
         {loading && <p>Cargando médicos...</p>}
         {error && <p className="text-danger">{error}</p>}
 
@@ -65,6 +68,8 @@ export function Medicos() {
                 title={medico.nombre}
                 subtitle={medico.especialidad}
                 content={[
+                  `Email: ${medico.email}`,
+                  `DNI: ${medico.dni}`,
                   `Matrícula: ${medico.matricula}`,
                 ]}
                 link={{ href: "#", text: "Editar" }}
