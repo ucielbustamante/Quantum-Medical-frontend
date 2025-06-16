@@ -40,6 +40,8 @@ export function Form() {
       navigate('/dashboard-admin');
     } else if (data.data.role === 'Patient'){
       navigate('/patient/dashboard');
+    } else if (data.data.role === 'Doctor') {
+      navigate('/dashboard-doctors')
     }
     
   } catch (err) {
