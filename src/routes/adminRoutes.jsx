@@ -9,6 +9,7 @@ import { NewUser } from "../pages/newUser";
 import { AllUsers } from "../pages/allUsers";
 import { NewEspecialty } from "../pages/newEspecialities";
 import { FindDoctorByEmail } from "../components/FindDoctorByEmail";
+import { EditarMedico } from "../pages/editMedic";
 
 export function AdminRoutes() {
   return (
@@ -44,6 +45,15 @@ export function AdminRoutes() {
           </PrivateRoute>
         }
       />
+      <Route 
+        path="/admin/doctors/edit/:id"
+        element={
+          <PrivateRoute allowedRole={["Admin"]}>
+            <EditarMedico/>
+          </PrivateRoute>
+        }
+      />
+
 
       <Route
         path="/specialities"

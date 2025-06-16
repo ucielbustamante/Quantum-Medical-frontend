@@ -1,16 +1,18 @@
 import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import { FormGenerico } from "../components/formGenerico"
 import { PageAdmin } from "../components/pageAdmin"
 import { apiRequest } from "../services/apiConection"
 
 export function NuevoMedico() {
+  const navigate = useNavigate()
   const [name, setName] = useState("")
   const [lastname, setLastname] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [dni, setDni] = useState("")
   const [licenseNumber, setLicenseNumber] = useState("")
-  const [specialty, setSpecialty] = useState("")
+  const [specialtiesSeleccionadas, setSpecialtiesSeleccionadas] = useState([]);
   const [mensaje, setMensaje] = useState("")
   const [especialidadesDisponibles, setEspecialidadesDisponibles] = useState([])
   const [isLoading, setIsLoading] = useState(false)
@@ -38,15 +40,18 @@ export function NuevoMedico() {
     { label: "DNI", type: "text", name: "dni", value: dni, onChange: (e) => setDni(e.target.value) },
     { label: "Matrícula", type: "text", name: "license_number", value: licenseNumber, onChange: (e) => setLicenseNumber(e.target.value) },
     {
-      label: "Especialidad",
-      type: "select",
-      name: "specialty",
-      value: specialty,
-      onChange: (e) => setSpecialty(e.target.value),
-      opciones: especialidadesDisponibles.map((esp) => esp.name)
+    label: "Especialidades",
+    type: "select",
+    name: "specialties",
+    value: specialtiesSeleccionadas,
+    onChange: (e) =>
+      setSpecialtiesSeleccionadas(Array.from(e.target.selectedOptions, option => option.value)),
+    opciones: especialidadesDisponibles.map((esp) => esp.name),
+    multiple: true // ¡Esto es clave!
     }
-  ]
 
+  ]
+  
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsLoading(true)
@@ -85,18 +90,16 @@ export function NuevoMedico() {
         license_number: licenseNumber
       }, token)
 
-      if (specialty) {
-        const especialidadSeleccionada = especialidadesDisponibles.find(esp => esp.name === specialty)
-        
-        if (especialidadSeleccionada) {
+      for (const espName of specialtiesSeleccionadas) {
+        const especialidad = especialidadesDisponibles.find((e) => e.name === espName);
+        if (especialidad) {
           await apiRequest("/api/doctor-specialties", "POST", {
             doctor_id: doctorData.id,
-            specialty_id: especialidadSeleccionada.id
-          }, token)
-        } else {
-          console.warn("No se encontró la especialidad seleccionada")
+            specialty_id: especialidad.id
+          }, token);
         }
       }
+
 
       setMensaje("Doctor creado exitosamente con todos sus datos")
       setName("")
@@ -105,7 +108,11 @@ export function NuevoMedico() {
       setPassword("")
       setDni("")
       setLicenseNumber("")
-      setSpecialty("")
+      setSpecialtiesSeleccionadas([])
+
+      setTimeout(() => {
+        navigate("/medicos")
+      }, 2000)
 
     } catch (error) {
       console.error("Error en el proceso de creación:", error)

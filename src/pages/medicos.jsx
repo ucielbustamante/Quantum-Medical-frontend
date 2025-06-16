@@ -7,26 +7,37 @@ import { apiRequest } from "../services/apiConection";
 export function Medicos() {
   const [medicos, setMedicos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [paginaActual, setPaginaActual] = useState(1);
+  const [limite] = useState(8);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchMedicos = async () => {
+      setLoading(true);
       try {
         const token = localStorage.getItem("token");
-        const result = await apiRequest("/api/doctors/search", "POST", {
-          limit: 100,
-        }, token);
 
+        const isSearching = searchTerm.trim().length > 0;
+        const offset = isSearching ? 0 : (paginaActual - 1) * limite;
+        const limitToUse = isSearching ? 1000 : limite;
+        /* trae todos los medicos que hay */
+        const result = await apiRequest("/api/doctors/search", "POST", {
+          limit: limitToUse,
+          offset
+        }, token);
+        /* se arman los datos de cada medico  */
         const medicosProcesados = result.data.map((doc) => ({
           id: doc.id,
           nombre: `${doc.User.name} ${doc.User.lastname}`,
-          especialidad: doc.Specialties?.[0]?.name || "Sin especialidad",
+          especialidad: doc.Specialties?.length
+              ? doc.Specialties.map((s) => s.name).join(", ")
+              : "Sin especialidad",
           email: `${doc.User.email}`,
           dni: `${doc.User.dni}`,
           matricula: doc.license_number || "Sin matrícula",
         }));
-
+        
         setMedicos(medicosProcesados);
       } catch (err) {
         setError("Error al cargar los médicos.");
@@ -37,20 +48,24 @@ export function Medicos() {
     };
 
     fetchMedicos();
-  }, []);
+  }, [paginaActual, searchTerm]);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
+    setPaginaActual(1);
   };
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
   };
-
+  /* filtrado de medicos incluyendo nombre,especialidad, email, dni, matricula, permitiendo 
+    que se use mayuscula o minuscula por igual*/
   const medicosFiltrados = medicos.filter((medico) =>
     medico.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
     medico.especialidad.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    medico.email.toLowerCase().includes(searchTerm.toLowerCase())
+    medico.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    medico.dni.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    medico.matricula.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -89,11 +104,33 @@ export function Medicos() {
                   `DNI: ${medico.dni}`,
                   `Matrícula: ${medico.matricula}`,
                 ]}
-                link={{ href: "#", text: "Editar" }}
+                link={{ href: `/admin/doctors/edit/${medico.id}`, text: "Editar" }}
               />
             </div>
           ))}
         </div>
+        {!searchTerm && (
+        <div className="d-flex justify-content-center mt-4 gap-2">
+          <button
+            className="btn btn-outline-primary"
+            onClick={() => setPaginaActual(prev => Math.max(prev - 1, 1))}
+            disabled={paginaActual === 1}
+            >
+            Anterior
+          </button>
+
+          <span className="align-self-center">Página {paginaActual}</span>
+
+          <button
+            className="btn btn-outline-primary"
+            onClick={() => setPaginaActual(prev => prev + 1)}
+            disabled={medicos.length < limite}
+            >
+            Siguiente
+          </button>
+        </div>
+        )}
+
       </div>
     </PageAdmin>
   );
