@@ -3,6 +3,7 @@ import { Card } from "../components/card";
 import { Link } from "react-router-dom";
 import { PageAdmin } from "../components/pageAdmin";
 import { apiRequest } from "../services/apiConection";
+import { HorariosDisponibles } from "../components/HorariosDisponible";
 
 export function Medicos() {
   const [medicos, setMedicos] = useState([]);
@@ -26,19 +27,47 @@ export function Medicos() {
           limit: limitToUse,
           offset
         }, token);
+        
+        const medicosBrutos = result.data;
         /* se arman los datos de cada medico  */
-        const medicosProcesados = result.data.map((doc) => ({
-          id: doc.id,
+        
+        const disponibilidadResult = await apiRequest("/api/availability", "GET", null, token);
+        const todasLasDisponibilidades = disponibilidadResult?.data || [];
+        const mapaDisponibilidad = new Map();
+        todasLasDisponibilidades.forEach(item => {
+        const doctorId = item.Doctor?.id;
+        if (!doctorId) return;
+
+        if (!mapaDisponibilidad.has(doctorId)) {
+          mapaDisponibilidad.set(doctorId, []);
+        }
+
+        mapaDisponibilidad.get(doctorId).push({
+          weekday: item.weekday,
+          start_time: item.start_time,
+          end_time: item.end_time,
+          slot_duration_min: item.slot_duration_min
+        });
+      });
+
+      const medicosConDisponibilidad = medicosBrutos.map(doc => {
+        const doctorId = doc.id;
+        return {
+          id: doctorId,
           nombre: `${doc.User.name} ${doc.User.lastname}`,
           especialidad: doc.Specialties?.length
-              ? doc.Specialties.map((s) => s.name).join(", ")
-              : "Sin especialidad",
-          email: `${doc.User.email}`,
-          dni: `${doc.User.dni}`,
+            ? doc.Specialties.map((s) => s.name).join(", ")
+            : "Sin especialidad",
+          email: doc.User.email,
+          dni: doc.User.dni,
           matricula: doc.license_number || "Sin matrícula",
-        }));
-        
-        setMedicos(medicosProcesados);
+          disponibilidad: mapaDisponibilidad.get(doctorId) || []
+        };
+      });
+
+      setMedicos(medicosConDisponibilidad);
+
+
       } catch (err) {
         setError("Error al cargar los médicos.");
         console.error(err);
@@ -103,11 +132,14 @@ export function Medicos() {
                   `Email: ${medico.email}`,
                   `DNI: ${medico.dni}`,
                   `Matrícula: ${medico.matricula}`,
+                  <HorariosDisponibles disponibilidad={medico.disponibilidad} />
                 ]}
                 link={{ href: `/admin/doctors/edit/${medico.id}`, text: "Editar" }}
               />
+
             </div>
           ))}
+
         </div>
         {!searchTerm && (
         <div className="d-flex justify-content-center mt-4 gap-2">
