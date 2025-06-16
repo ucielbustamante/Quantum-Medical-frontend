@@ -7,6 +7,7 @@ import { PagePatients } from "./components/pagePatients";
 import { DashboardPatients } from './pages/dashboardPatients';
 import { SacarTurno } from "./pages/newAppointment";
 import { MisTurnos } from "./pages/appointmentPatient";
+import { AuthSuccess } from './components/authSuccess';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         {/* pagina gral para todos */}
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Form />} />
+        <Route path="/auth/success" element={<AuthSuccess />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordForm />} /> 
 
