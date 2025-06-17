@@ -18,15 +18,16 @@ export function FormGenerico({ campos, onSubmit, titulo, botonTexto = "Guardar" 
                                 value={campo.value}
                                 onChange={campo.onChange}
                                 className={styles.select}
+                                multiple={campo.multiple || false}
                             >
-
-                                <option value="">Seleccionar</option>
+                                {!campo.multiple && <option value="">Seleccionar</option>}
                                 {campo.opciones.map((opcion, i) => (
-                                    <option key={i} value={opcion}>
-                                        {opcion}
+                                    <option key={i} value={typeof opcion === 'object' ? opcion.value : opcion}>
+                                        {typeof opcion === 'object' ? opcion.label : opcion}
                                     </option>
                                 ))}
                             </select>
+
                         ) : (
                             <input
                                 type={campo.type}

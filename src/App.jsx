@@ -3,7 +3,7 @@ import { Form } from './components/form';
 import { ForgotPasswordPage } from './pages/forgotPassword';
 import { ResetPasswordForm } from './components/resetPasswordForm';
 import { AdminRoutes } from "./routes/adminRoutes";
-import { PagePatients } from "./components/pagePatients";
+// import { DoctorsRoutes } from './routes/doctorsRoutes';
 import { DashboardPatients } from './pages/dashboardPatients';
 import { SacarTurno } from "./pages/newAppointment";
 import { MisTurnos } from "./pages/appointmentPatient";
@@ -22,6 +22,9 @@ function App() {
 
        {/* Rutas Admin */}
         <>{AdminRoutes()}</>
+
+        {/* Rutas Doctors */}
+        {/* <>{DoctorsRoutes()}</> */}
 
         {/* esta ruta aun no tiene contenido */}
         <Route path='/patient/dashboard' element={<DashboardPatients />}/>

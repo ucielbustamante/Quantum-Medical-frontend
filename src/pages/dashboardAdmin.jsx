@@ -36,6 +36,18 @@ export function DashboardAdmin() {
             </div>
             <div className="col-md-3">
               <Card
+                title="Pacientes"
+                subtitle="Gestionar pacientes"
+                content={[
+                  "Ver datos del paciente, turnos",
+                  "Historial clinico",
+                  
+                ]}
+                link={{ href: "/admin/all-patients", text: "Entrar" }}
+              />
+            </div>
+            <div className="col-md-3">
+              <Card
                 title="Medicos"
                 subtitle="Listado de profesionales registrados"
                 content={[
