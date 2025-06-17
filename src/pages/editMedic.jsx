@@ -39,7 +39,8 @@ export function EditarMedico() {
 
   useEffect(() => {
     const fetchDoctorData = async () => {
-      if (!id || especialidadesDisponibles.length === 0) return;
+      
+      if (!id) return;
 
       try {
         //traigo todos los doctores y luego filtro por ID comparando con el ID del doc que se selecciono

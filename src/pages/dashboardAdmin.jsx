@@ -43,7 +43,7 @@ export function DashboardAdmin() {
                   "Historial clinico",
                   
                 ]}
-                link={{ href: "#", text: "Entrar" }}
+                link={{ href: "/admin/all-patients", text: "Entrar" }}
               />
             </div>
             <div className="col-md-3">
