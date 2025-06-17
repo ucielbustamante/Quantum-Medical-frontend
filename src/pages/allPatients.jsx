@@ -93,7 +93,7 @@ export function AllPatients() {
               onChange={handleSearchChange}
             />
           </form>
-          <Link to="/formulario-medico">
+          <Link to="/admin/new-patient">
             <button className="btn btn-secondary">Agregar Paciente</button>
           </Link>
         </div>
@@ -105,7 +105,7 @@ export function AllPatients() {
             <div className="col-md-3" key={p.id}>
               <Card
                 title={p.nombre}
-                subtitle={[`DNI: ${p.nombre}`]}
+                subtitle={[`DNI: ${p.dni}`]}
                 content={[
                   `Email: ${p.email}`,
                   `Fecha Nacimiento: ${p.fecha_nacimineto}`,
