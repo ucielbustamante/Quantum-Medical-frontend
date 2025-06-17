@@ -7,8 +7,11 @@ export function Card({ title, subtitle, content = [], link }) {
       {subtitle && <h6 className={styles.cardSubtitle}>{subtitle}</h6>}
       
       {content.map((linea, index) => (
-        <p key={index}>{linea}</p>
+        typeof linea === "string"
+          ? <p key={index}>{linea}</p>
+          : <div key={index} className="mt-2">{linea}</div>
       ))}
+
 
       {link && (
         <a href={link.href} className={styles.cardLink}>
