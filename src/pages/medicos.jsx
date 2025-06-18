@@ -12,6 +12,7 @@ export function Medicos() {
   const [limite] = useState(8);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [deletingDoctorId, setDeletingDoctorId] = useState(null);
 
   useEffect(() => {
     const fetchMedicos = async () => {
@@ -79,6 +80,29 @@ export function Medicos() {
     fetchMedicos();
   }, [paginaActual, searchTerm]);
 
+  const handleDeleteDoctor = async (doctorId) => {
+    if (!window.confirm("¿Estás seguro de que quieres eliminar este médico? Esta acción no se puede deshacer.")) {
+      return;
+    }
+
+    try {
+      setDeletingDoctorId(doctorId);
+      const token = localStorage.getItem("token");
+      
+      await apiRequest(`/api/doctors/${doctorId}`, "DELETE", null, token);
+      
+      // Actualizar la lista de médicos
+      setMedicos(prevDoctors => prevDoctors.filter(doctor => doctor.id !== doctorId));
+      
+      alert("Médico eliminado exitosamente");
+    } catch (err) {
+      console.error("Error al eliminar médico:", err);
+      alert("Error al eliminar el médico. Por favor intente nuevamente.");
+    } finally {
+      setDeletingDoctorId(null);
+    }
+  };
+
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
     setPaginaActual(1);
@@ -134,7 +158,15 @@ export function Medicos() {
                   `Matrícula: ${medico.matricula}`,
                   <HorariosDisponibles disponibilidad={medico.disponibilidad} />
                 ]}
-                links={{ href: `/admin/doctors/edit/${medico.id}`, text: "Editar" }}
+                links={[{ href: `/admin/doctors/edit/${medico.id}`, text: "Editar" }]}
+                actions={[
+                  {
+                    text: deletingDoctorId === medico.id ? "Eliminando..." : "Eliminar",
+                    onClick: () => handleDeleteDoctor(medico.id),
+                    className: "btn btn-danger btn-sm",
+                    disabled: deletingDoctorId === medico.id
+                  }
+                ]}
               />
 
             </div>

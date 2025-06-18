@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { FormGenerico } from "../components/formGenerico";
 import { PageAdmin } from "../components/pageAdmin";
 import { apiRequest } from "../services/apiConection";
+import { doctorSpecialtyService } from "../services/doctorSpecialtyService";
 import formStyles from "../styles/formsGeneral.module.css";
 
 export function EditarMedico() {
@@ -41,7 +42,7 @@ export function EditarMedico() {
   ];
 
   useEffect(() => {
-    //aca traigo las especialidades totales para mostrar en la edicion
+    // Cargar todas las especialidades disponibles
     const fetchEspecialidades = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -63,7 +64,7 @@ export function EditarMedico() {
       try {
         const token = localStorage.getItem("token");
 
-        //traigo todos los doctores y luego filtro por ID comparando con el ID del doc que se selecciono
+        // Obtener datos del doctor
         const result = await apiRequest("/api/doctors/search", "POST", { limit: 1000 }, token);
         const doctor = result.data.find((doc) => doc.id === id);
 
@@ -80,23 +81,24 @@ export function EditarMedico() {
         setDni(doctor.User?.dni || doctor.dni || "");
         setLicenseNumber(doctor.license_number || "");
 
-        //aca trae trae las especialidades de todos los medicos desde el back
-        const specialtiesResponse = await apiRequest("/api/doctor-specialties", "GET", null, token);
-        const allDoctorSpecialties = specialtiesResponse.data;
+        // Obtener especialidades del doctor usando el nuevo servicio
+        const specialtiesResponse = await doctorSpecialtyService.getDoctorSpecialties(id);
+        const doctorSpecialties = specialtiesResponse.data;
 
-        //se filtran los medicos por ID para solo quedarse con el que coincida con el med actual
-        const specialtiesDelMedico = allDoctorSpecialties.filter((ds) => ds.doctor_id === id);
+        // Mapear las especialidades con la información completa
+        const specialtiesWithInfo = doctorSpecialties.map(assoc => {
+          const specialtyInfo = especialidadesDisponibles.find(esp => esp.id === assoc.specialty_id);
+          return {
+            id: assoc.specialty_id,
+            name: specialtyInfo?.name || 'Especialidad no encontrada',
+            is_active: specialtyInfo?.is_active ?? true
+          };
+        });
 
-        let doctorSpecialties = [];
-        for (const idEspMed of specialtiesDelMedico) {
-          const findSpecialties = especialidadesDisponibles.find((e) => e.id === idEspMed.specialty_id);
-          if (findSpecialties) {
-            doctorSpecialties.push(findSpecialties);
-          }
-        }
-        setSpecialtiesActuales(doctorSpecialties);
-        setSpecialtiesSeleccionadas(doctorSpecialties.map((e) => e.id));
+        setSpecialtiesActuales(specialtiesWithInfo);
+        setSpecialtiesSeleccionadas(specialtiesWithInfo.map(spec => spec.id));
 
+        // Obtener horarios del doctor
         const availabilityResponse = await apiRequest(`/api/doctors/${id}/availability`, "GET", null, token);
         if (availabilityResponse.data) {
           setHorariosMedico(availabilityResponse.data);
@@ -106,8 +108,8 @@ export function EditarMedico() {
           setOriginalHorariosMedico([]);
         }
       } catch (error) {
-        console.error("Error al cargar datos del médico o horarios:", error);
-        setMensaje("Error al cargar los datos del médico o sus horarios.");
+        console.error("Error al cargar datos del médico:", error);
+        setMensaje("Error al cargar los datos del médico.");
       } finally {
         setLoadingData(false);
       }
@@ -143,7 +145,7 @@ export function EditarMedico() {
     setHorariosMedico(horariosMedico.filter((horario) => horario.id !== idToRemove));
   };
 
-  //para manejar cuando se cambian las especialidades
+  // Manejar cambios en las especialidades seleccionadas
   const handleChangeEspecialidades = (e) => {
     const seleccionadas = Array.from(e.target.selectedOptions, (option) => option.value);
     setSpecialtiesSeleccionadas(seleccionadas);
@@ -177,7 +179,7 @@ export function EditarMedico() {
     const token = localStorage.getItem("token");
 
     try {
-      //actualiza la info del user
+      // Actualizar información del usuario
       if (doctorData.User?.id) {
         await apiRequest(
           `/api/users/${doctorData.User.id}`,
@@ -191,7 +193,8 @@ export function EditarMedico() {
           token
         );
       }
-      //actualiza info de doctors
+
+      // Actualizar información del doctor
       await apiRequest(
         `/api/doctors/${id}`,
         "PUT",
@@ -201,38 +204,19 @@ export function EditarMedico() {
         token
       );
 
-      //trae info de doctor-specialties y luego filtra para quedarse con las que corresponda con el ID del doc
-      const originalSpecialtiesIds = specialtiesActuales.map((s) => s.id);
+      // Actualizar especialidades usando el nuevo servicio
+      await doctorSpecialtyService.updateDoctorSpecialties(id, specialtiesSeleccionadas);
 
-      //para comprobar si se tiene que eliminar una especialidad y/o agregar una nueva
-      const especialidadesAEliminar = originalSpecialtiesIds.filter((specialtyId) => !specialtiesSeleccionadas.includes(specialtyId));
-      const especialidadesANuevas = specialtiesSeleccionadas.filter((specialtyId) => !originalSpecialtiesIds.includes(specialtyId));
+      // Actualizar horarios
+      const horariosAEliminar = originalHorariosMedico.filter((originalHorario) => 
+        !horariosMedico.some((currentHorario) => currentHorario.id === originalHorario.id)
+      );
 
-      //se elimina especialidad actual del medico que no queda seleccionada
-      for (const espId of especialidadesAEliminar) {
-        try {
-          await apiRequest(`/api/doctor-specialties/${id}/${espId}`, "DELETE", null, token);
-        } catch (err) {
-          console.warn("Error al eliminar especialidad:", espId, err);
-        }
-      }
-      //se agrega nueva especialidad seleccionada
-      for (const espId of especialidadesANuevas) {
-        await apiRequest(
-          "/api/doctor-specialties",
-          "POST",
-          {
-            doctor_id: id,
-            specialty_id: espId,
-          },
-          token
-        );
-      }
+      const horariosANuevos = horariosMedico.filter((currentHorario) => 
+        !originalHorariosMedico.some((originalHorario) => originalHorario.id === currentHorario.id)
+      );
 
-      const horariosAEliminar = originalHorariosMedico.filter((originalHorario) => !horariosMedico.some((currentHorario) => currentHorario.id === originalHorario.id));
-
-      const horariosANuevos = horariosMedico.filter((currentHorario) => !originalHorariosMedico.some((originalHorario) => originalHorario.id === currentHorario.id));
-
+      // Eliminar horarios que ya no existen
       for (const horario of horariosAEliminar) {
         try {
           await apiRequest(`/api/availability/${horario.id}`, "DELETE", null, token);
@@ -241,6 +225,7 @@ export function EditarMedico() {
         }
       }
 
+      // Agregar nuevos horarios
       for (const horario of horariosANuevos) {
         await apiRequest(
           `/api/doctors/${id}/availability`,
@@ -260,8 +245,8 @@ export function EditarMedico() {
         navigate("/medicos");
       }, 2000);
     } catch (error) {
-      console.error("Error al actualizar médico o sus horarios:", error);
-      setMensaje(error.message || "Error al actualizar médico o sus horarios.");
+      console.error("Error al actualizar médico:", error);
+      setMensaje(error.message || "Error al actualizar médico.");
     } finally {
       setIsLoading(false);
     }
@@ -290,7 +275,7 @@ export function EditarMedico() {
     );
   }
 
-  const espMed = specialtiesActuales.length ? specialtiesActuales.map((s) => s.label || s.name).join(", ") : "Sin especialidad";
+  const espMed = specialtiesActuales.length ? specialtiesActuales.map((s) => s.name).join(", ") : "Sin especialidad";
 
   return (
     <PageAdmin>

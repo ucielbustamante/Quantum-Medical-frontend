@@ -8,10 +8,15 @@ import { DashboardAdmin } from "../pages/dashboardAdmin";
 import { NewUser } from "../pages/newUser";
 import { AllUsers } from "../pages/allUsers";
 import { NewEspecialty } from "../pages/newEspecialities";
+import { AllSpecialties } from "../pages/allSpecialties";
 import { FindDoctorByEmail } from "../components/FindDoctorByEmail";
 import { EditarMedico } from "../pages/editMedic";
 import { NewPatient } from "../pages/newPatients";
 import { EditPatient } from "../pages/editPatient";
+import AllClinicalRecords from "../pages/allClinicalRecords";
+import NewClinicalRecord from "../pages/newClinicalRecord";
+import ViewClinicalRecord from "../pages/viewClinicalRecord";
+import EditClinicalRecord from "../pages/editClinicalRecord";
 
 export function AdminRoutes() {
   return (
@@ -69,7 +74,7 @@ export function AdminRoutes() {
       <Route 
         path="/admin/patients/:id/turnos"
         element={
-          <PrivateRoute allowedRole={["Admin"]}>
+          <PrivateRoute allowedRoles={["Admin"]}>
             <Turnos />
           </PrivateRoute>
         }
@@ -78,7 +83,7 @@ export function AdminRoutes() {
       <Route 
         path="/admin/doctors/edit/:id"
         element={
-          <PrivateRoute allowedRole={["Admin"]}>
+          <PrivateRoute allowedRoles={["Admin"]}>
             <EditarMedico/>
           </PrivateRoute>
         }
@@ -89,6 +94,70 @@ export function AdminRoutes() {
         element={
           <PrivateRoute allowedRoles={["Admin"]}>
             <NewEspecialty />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/admin/specialties"
+        element={
+          <PrivateRoute allowedRoles={["Admin"]}>
+            <AllSpecialties />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/admin/new-specialty"
+        element={
+          <PrivateRoute allowedRoles={["Admin"]}>
+            <NewEspecialty />
+          </PrivateRoute>
+        }
+      />
+
+      {/* Rutas de Registros Clínicos */}
+      <Route
+        path="/admin/clinical-records"
+        element={
+          <PrivateRoute allowedRoles={["Admin", "Doctor"]}>
+            <AllClinicalRecords />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/admin/new-clinical-record"
+        element={
+          <PrivateRoute allowedRoles={["Admin", "Doctor"]}>
+            <NewClinicalRecord />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/admin/new-clinical-record/:patientId"
+        element={
+          <PrivateRoute allowedRoles={["Admin", "Doctor"]}>
+            <NewClinicalRecord />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/admin/clinical-records/:id"
+        element={
+          <PrivateRoute allowedRoles={["Admin", "Doctor"]}>
+            <ViewClinicalRecord />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/admin/clinical-records/:id/edit"
+        element={
+          <PrivateRoute allowedRoles={["Admin", "Doctor"]}>
+            <EditClinicalRecord />
           </PrivateRoute>
         }
       />

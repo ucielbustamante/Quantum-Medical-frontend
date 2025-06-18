@@ -47,6 +47,18 @@ export function DashboardAdmin() {
                 links={[{ href: "/medicos", text: "Entrar" }]}
               />
             </div>
+            <div className="col-md-3">
+              <Card
+                title="Registros Clínicos"
+                subtitle="Gestionar historiales médicos"
+                content={[
+                  "Crear y editar registros clínicos",
+                  "Subir documentos médicos",
+                  "Ver historial completo"
+                ]}
+                links={[{ href: "/admin/clinical-records", text: "Entrar" }]}
+              />
+            </div>
           
         </div>
       </div>

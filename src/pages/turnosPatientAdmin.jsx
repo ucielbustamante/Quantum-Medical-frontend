@@ -10,6 +10,7 @@ export function Turnos() {
   const [turnos, setTurnos] = useState([]);
   const [doctores, setDoctores] = useState([]);
   const [error, setError] = useState("");
+  const [deletingAppointmentId, setDeletingAppointmentId] = useState(null);
   const token = localStorage.getItem("token");
   console.log('---userId',id);
   
@@ -41,6 +42,28 @@ export function Turnos() {
     
   }, [id, token]);
 
+  const handleDeleteAppointment = async (appointmentId) => {
+    if (!window.confirm("¿Estás seguro de que quieres eliminar este turno? Esta acción no se puede deshacer.")) {
+      return;
+    }
+
+    try {
+      setDeletingAppointmentId(appointmentId);
+      
+      await apiRequest(`/api/appointments/${appointmentId}`, "DELETE", null, token);
+      
+      // Actualizar la lista de turnos
+      setTurnos(prevAppointments => prevAppointments.filter(appointment => appointment.id !== appointmentId));
+      
+      alert("Turno eliminado exitosamente");
+    } catch (err) {
+      console.error("Error al eliminar turno:", err);
+      alert("Error al eliminar el turno. Por favor intente nuevamente.");
+    } finally {
+      setDeletingAppointmentId(null);
+    }
+  };
+
   return (
     <PageAdmin>
       <h1 className={styles.title}>Turnos del Paciente</h1>
@@ -59,7 +82,16 @@ export function Turnos() {
                         subtitle={`Médico: ${doctor?.User?.name || ''} ${doctor?.User?.lastname || ''}`}
                         content={[
                           `Fecha:${turno.date.split("T")[0]}`,
-                          `Hora: ${turno.start_time} - ${turno.end_time}`
+                          `Hora: ${turno.start_time} - ${turno.end_time}`,
+                          `Estado: ${turno.status}`
+                        ]}
+                        actions={[
+                          {
+                            text: deletingAppointmentId === turno.id ? "Eliminando..." : "Eliminar Turno",
+                            onClick: () => handleDeleteAppointment(turno.id),
+                            className: "btn btn-danger btn-sm",
+                            disabled: deletingAppointmentId === turno.id
+                          }
                         ]}
                       />
                     );

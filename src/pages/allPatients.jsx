@@ -12,6 +12,7 @@ export function AllPatients() {
   const [limite] = useState(8);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [deletingPatientId, setDeletingPatientId] = useState(null);
 
   useEffect(() => {
     const fetchPacientes = async () => {
@@ -58,6 +59,29 @@ export function AllPatients() {
 
     fetchPacientes();
   }, [paginaActual, searchTerm]);
+
+  const handleDeletePatient = async (patientId) => {
+    if (!window.confirm("¿Estás seguro de que quieres eliminar este paciente? Esta acción no se puede deshacer.")) {
+      return;
+    }
+
+    try {
+      setDeletingPatientId(patientId);
+      const token = localStorage.getItem("token");
+      
+      await apiRequest(`/api/patients/${patientId}`, "DELETE", null, token);
+      
+      // Actualizar la lista de pacientes
+      setPaciente(prevPatients => prevPatients.filter(patient => patient.id !== patientId));
+      
+      alert("Paciente eliminado exitosamente");
+    } catch (err) {
+      console.error("Error al eliminar paciente:", err);
+      alert("Error al eliminar el paciente. Por favor intente nuevamente.");
+    } finally {
+      setDeletingPatientId(null);
+    }
+  };
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -114,7 +138,16 @@ export function AllPatients() {
                 ]}
                 links={[
                   { href: `/admin/patients/edit/${p.id}`, text: "Editar" },
-                  { href: `/admin/patients/${p.id}/turnos`, text: "Ver Turnos" }
+                  { href: `/admin/patients/${p.id}/turnos`, text: "Ver Turnos" },
+                  { href: `/admin/clinical-records?patient_id=${p.id}`, text: "Ver Registros Clínicos" }
+                ]}
+                actions={[
+                  {
+                    text: deletingPatientId === p.id ? "Eliminando..." : "Eliminar",
+                    onClick: () => handleDeletePatient(p.id),
+                    className: "btn btn-danger btn-sm",
+                    disabled: deletingPatientId === p.id
+                  }
                 ]}
               />
 

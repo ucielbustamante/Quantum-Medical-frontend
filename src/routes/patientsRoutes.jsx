@@ -2,6 +2,8 @@ import { Route } from "react-router-dom";
 import { PrivateRoute } from "../components/PrivateRoute";
 import { Appointments } from "../pages/appointmentPatient";
 import { DashboardPatients } from "../pages/dashboardPatients"; 
+import PatientClinicalRecords from "../pages/patientClinicalRecords";
+import ViewClinicalRecord from "../pages/viewClinicalRecord";
 
 export function PatientRoutes() {
   return (
@@ -22,7 +24,22 @@ export function PatientRoutes() {
           </PrivateRoute>
         }
       />
-      
+      <Route
+        path="/patient/clinical-records"
+        element={
+          <PrivateRoute allowedRoles={["Patient"]}>
+            <PatientClinicalRecords />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/patient/clinical-records/:recordId"
+        element={
+          <PrivateRoute allowedRoles={["Patient"]}>
+            <ViewClinicalRecord />
+          </PrivateRoute>
+        }
+      />
     </>
   );
 }

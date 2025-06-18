@@ -5,52 +5,34 @@ import { ResetPasswordForm } from './components/resetPasswordForm';
 import { AdminRoutes } from "./routes/adminRoutes";
 import { PublicRoutes } from './routes/publicRoutes';
 import { DoctorsRoutes } from './routes/doctorsRoutes';
-import { DashboardPatients } from './pages/dashboardPatients';
-import { AuthSuccess } from './components/authSuccess';
 import { PatientRoutes } from './routes/patientsRoutes';
+import { AuthSuccess } from './components/authSuccess';
 
 function App() {
   return (
-  <BrowserRouter>
+    <BrowserRouter>
       <Routes>
-        {/* pagina gral para todos */}
+        {/* Páginas generales para todos */}
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Form />} />
         <Route path="/auth/success" element={<AuthSuccess />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordForm />} /> 
 
-       {/* Rutas Admin */}
+        {/* Rutas Admin */}
         <>{AdminRoutes()}</>
+        
+        {/* Rutas Públicas */}
         <>{PublicRoutes()}</>
+        
+        {/* Rutas Patient */}
         <>{PatientRoutes()}</>
-        <>{DoctorsRoutes()}</>
-
+        
         {/* Rutas Doctors */}
-        {/* <>{DoctorsRoutes()}</> */}
-
-        {/* esta ruta aun no tiene contenido */}
-        {/* <Route path='/patient/dashboard' element={<DashboardPatients />}/> */}
-        {/* para que el paciente saque turno */}
-        
-        
+        <>{DoctorsRoutes()}</>
       </Routes>
-  </BrowserRouter> )
-  // const [message, setMessage] = useState('');
-
-  // useEffect(() => {
-  //   fetch('http://localhost:5000/api/hello')
-  //     .then(res => res.json())
-  //     .then(data => setMessage(data.message))
-  //     .catch(console.error);
-  // }, []);
-
-  // return (
-  //   <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-  //     <h1>Respuesta de la API:</h1>
-  //     <p>{message || 'Cargando...'}</p>
-  //   </div>
-  // );
+    </BrowserRouter>
+  );
 }
 
 export default App;

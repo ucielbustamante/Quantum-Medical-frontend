@@ -12,6 +12,7 @@ export function AllUsers() {
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [allUsersRawData, setAllUsersRawData] = useState([]);
+  const [deletingUserId, setDeletingUserId] = useState(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -58,6 +59,30 @@ export function AllUsers() {
 
     fetchUsers();
   }, [paginaActual, searchTerm]); 
+
+  const handleDeleteUser = async (userId) => {
+    if (!window.confirm("¿Estás seguro de que quieres eliminar este usuario? Esta acción no se puede deshacer.")) {
+      return;
+    }
+
+    try {
+      setDeletingUserId(userId);
+      const token = localStorage.getItem("token");
+      
+      await apiRequest(`/api/users/${userId}`, "DELETE", null, token);
+      
+      // Actualizar la lista de usuarios
+      setUsers(prevUsers => prevUsers.filter(user => user.id !== userId));
+      setAllUsersRawData(prevUsers => prevUsers.filter(user => user.id !== userId));
+      
+      alert("Usuario eliminado exitosamente");
+    } catch (err) {
+      console.error("Error al eliminar usuario:", err);
+      alert("Error al eliminar el usuario. Por favor intente nuevamente.");
+    } finally {
+      setDeletingUserId(null);
+    }
+  };
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -116,7 +141,14 @@ export function AllUsers() {
                     `DNI: ${user.dni || "N/A"}`,
                   ]}
                   link={{ href: `/admin/users/edit/${user.id}`, text: "Editar" }}
-
+                  actions={[
+                    {
+                      text: deletingUserId === user.id ? "Eliminando..." : "Eliminar",
+                      onClick: () => handleDeleteUser(user.id),
+                      className: "btn btn-danger btn-sm",
+                      disabled: deletingUserId === user.id
+                    }
+                  ]}
                 />
               </div>
             ))
