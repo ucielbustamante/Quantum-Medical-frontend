@@ -3,31 +3,71 @@ import { Card } from "../components/card";
 import { Link } from "react-router-dom";
 import { PageAdmin } from "../components/pageAdmin";
 import { apiRequest } from "../services/apiConection";
+import { HorariosDisponibles } from "../components/HorariosDisponible";
 
 export function Medicos() {
   const [medicos, setMedicos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [paginaActual, setPaginaActual] = useState(1);
+  const [limite] = useState(8);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchMedicos = async () => {
+      setLoading(true);
       try {
         const token = localStorage.getItem("token");
+
+        const isSearching = searchTerm.trim().length > 0;
+        const offset = isSearching ? 0 : (paginaActual - 1) * limite;
+        const limitToUse = isSearching ? 1000 : limite;
+        /* trae todos los medicos que hay */
         const result = await apiRequest("/api/doctors/search", "POST", {
-          limit: 100,
+          limit: limitToUse,
+          offset
         }, token);
+        
+        const medicosBrutos = result.data;
+        /* se arman los datos de cada medico  */
+        
+        const disponibilidadResult = await apiRequest("/api/availability", "GET", null, token);
+        const todasLasDisponibilidades = disponibilidadResult?.data || [];
+        const mapaDisponibilidad = new Map();
+        todasLasDisponibilidades.forEach(item => {
+        const doctorId = item.Doctor?.id;
+        if (!doctorId) return;
 
-        const medicosProcesados = result.data.map((doc) => ({
-          id: doc.id,
+        if (!mapaDisponibilidad.has(doctorId)) {
+          mapaDisponibilidad.set(doctorId, []);
+        }
+
+        mapaDisponibilidad.get(doctorId).push({
+          weekday: item.weekday,
+          start_time: item.start_time,
+          end_time: item.end_time,
+          slot_duration_min: item.slot_duration_min
+        });
+      });
+
+      const medicosConDisponibilidad = medicosBrutos.map(doc => {
+        const doctorId = doc.id;
+        return {
+          id: doctorId,
           nombre: `${doc.User.name} ${doc.User.lastname}`,
-          especialidad: doc.Specialties?.[0]?.name || "Sin especialidad",
-          email: `${doc.User.email}`,
-          dni: `${doc.User.dni}`,
+          especialidad: doc.Specialties?.length
+            ? doc.Specialties.map((s) => s.name).join(", ")
+            : "Sin especialidad",
+          email: doc.User.email,
+          dni: doc.User.dni,
           matricula: doc.license_number || "Sin matrícula",
-        }));
+          disponibilidad: mapaDisponibilidad.get(doctorId) || []
+        };
+      });
 
-        setMedicos(medicosProcesados);
+      setMedicos(medicosConDisponibilidad);
+
+
       } catch (err) {
         setError("Error al cargar los médicos.");
         console.error(err);
@@ -37,20 +77,24 @@ export function Medicos() {
     };
 
     fetchMedicos();
-  }, []);
+  }, [paginaActual, searchTerm]);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
+    setPaginaActual(1);
   };
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
   };
-
+  /* filtrado de medicos incluyendo nombre,especialidad, email, dni, matricula, permitiendo 
+    que se use mayuscula o minuscula por igual*/
   const medicosFiltrados = medicos.filter((medico) =>
     medico.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
     medico.especialidad.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    medico.email.toLowerCase().includes(searchTerm.toLowerCase())
+    medico.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    medico.dni.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    medico.matricula.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -88,12 +132,37 @@ export function Medicos() {
                   `Email: ${medico.email}`,
                   `DNI: ${medico.dni}`,
                   `Matrícula: ${medico.matricula}`,
+                  <HorariosDisponibles disponibilidad={medico.disponibilidad} />
                 ]}
-                link={{ href: "#", text: "Editar" }}
+                link={{ href: `/admin/doctors/edit/${medico.id}`, text: "Editar" }}
               />
+
             </div>
           ))}
+
         </div>
+        {!searchTerm && (
+        <div className="d-flex justify-content-center mt-4 gap-2">
+          <button
+            className="btn btn-outline-primary"
+            onClick={() => setPaginaActual(prev => Math.max(prev - 1, 1))}
+            disabled={paginaActual === 1}
+            >
+            Anterior
+          </button>
+
+          <span className="align-self-center">Página {paginaActual}</span>
+
+          <button
+            className="btn btn-outline-primary"
+            onClick={() => setPaginaActual(prev => prev + 1)}
+            disabled={medicos.length < limite}
+            >
+            Siguiente
+          </button>
+        </div>
+        )}
+
       </div>
     </PageAdmin>
   );

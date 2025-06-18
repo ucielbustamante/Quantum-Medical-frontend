@@ -3,10 +3,11 @@ import { Form } from './components/form';
 import { ForgotPasswordPage } from './pages/forgotPassword';
 import { ResetPasswordForm } from './components/resetPasswordForm';
 import { AdminRoutes } from "./routes/adminRoutes";
-import { PagePatients } from "./components/pagePatients";
+// import { DoctorsRoutes } from './routes/doctorsRoutes';
 import { DashboardPatients } from './pages/dashboardPatients';
 import { SacarTurno } from "./pages/newAppointment";
 import { MisTurnos } from "./pages/appointmentPatient";
+import { AuthSuccess } from './components/authSuccess';
 
 function App() {
   return (
@@ -15,11 +16,15 @@ function App() {
         {/* pagina gral para todos */}
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Form />} />
+        <Route path="/auth/success" element={<AuthSuccess />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordForm />} /> 
 
        {/* Rutas Admin */}
         <>{AdminRoutes()}</>
+
+        {/* Rutas Doctors */}
+        {/* <>{DoctorsRoutes()}</> */}
 
         {/* esta ruta aun no tiene contenido */}
         <Route path='/patient/dashboard' element={<DashboardPatients />}/>

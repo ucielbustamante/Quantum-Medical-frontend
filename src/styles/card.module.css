@@ -30,3 +30,9 @@
 .cardLink:hover {
   text-decoration: underline;
 }
+
+.card {
+  overflow: visible;
+  position: relative;
+  z-index: 1;
+}
