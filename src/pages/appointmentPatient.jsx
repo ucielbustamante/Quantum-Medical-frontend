@@ -3,19 +3,23 @@ import { Card } from "../components/card";
 import styles from '../styles/turnos.module.css';
 import { PagePatients } from "../components/pagePatients";
 import { apiRequest } from "../services/apiConection";
+import { useParams } from "react-router-dom";
 
 export function Appointments() {
   const [turnos, setTurnos] = useState([]);
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId")
-
+  console.log('---token', token);
   
   useEffect(() => {
     const fetchTurnos = async () => {
       try {
-        //me falta conseguir el id del paciente, porque pensaba usar el userId para buscar
-       // en pacientes y obtener el id, pero solo puede ingresar admin
-        const response = await apiRequest(`/api/patients/:idPatient/appointments`, "GET", null, token);
+        const paciente = await apiRequest("/api/patients/search", "POST", null, token);
+        const listaPacientes = paciente.data
+        
+        const pacienteFiltrado = listaPacientes.find(p => p.user_id === userId);
+        console.log('---pacienteFiltrado',pacienteFiltrado);
+        const response = await apiRequest(`/api/patients/${pacienteFiltrado.id}/appointments`, "GET", null, token);
         setTurnos(response.data || []);
         console.log("---turnosPaciente", response.data);
       } catch (error) {
@@ -23,10 +27,12 @@ export function Appointments() {
       }
     };
 
-    if ( token) {
-      fetchTurnos();
-    }
-  }, [ token]);
+    
+    fetchTurnos();
+  
+    console.log('--turnos', turnos);
+    
+  }, [userId, token]);
 
   return (
     <PagePatients>
@@ -38,8 +44,8 @@ export function Appointments() {
             {turnos.map((turno, index) => (
               <Card
                 key={index}
-                title={`Especialidad: ${turno.Doctor.Specialties[0]?.name || "Sin asignar"}`}
-                subtitle={`Médico: ${turno.Doctor.User.name} ${turno.Doctor.User.lastname}`}
+                title={`Especialidad:`}
+                subtitle={`Médico: `}
                 content={[
                   `Fecha: ${turno.date}`,
                   `Hora: ${turno.start_time} - ${turno.end_time}`
