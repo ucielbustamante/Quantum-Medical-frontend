@@ -61,7 +61,7 @@ export function Appointments() {
                   title={`Especialidad: ${doctor?.Specialties?.[0]?.name || 'Sin asignar'}`}
                   subtitle={`Médico: ${doctor?.User?.name || ''} ${doctor?.User?.lastname || ''}`}
                   content={[
-                    `Fecha: ${turno.date}`,
+                    `Fecha:${turno.date.split("T")[0]}`,
                     `Hora: ${turno.start_time} - ${turno.end_time}`
                   ]}
                 />

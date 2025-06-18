@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styles from '../styles/card.module.css'
 
 export function Card({ title, subtitle, content = [], links = [] }) {
@@ -16,9 +17,9 @@ export function Card({ title, subtitle, content = [], links = [] }) {
       {links.length > 0 && (
         <div className={styles.cardLinks}>
           {links.map((link, index) => (
-            <a key={index} href={link.href} className={styles.cardLink}>
+            <Link key={index} to={link.href} className={styles.cardLink}>
               {link.text}
-            </a>
+            </Link>
           ))}
         </div>
       )}
