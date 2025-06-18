@@ -10,12 +10,19 @@ export function Turnos() {
   const [turnos, setTurnos] = useState([]);
   const [error, setError] = useState("");
   const token = localStorage.getItem("token");
-  console.log('---patientId',id);
+  console.log('---userId',id);
   
   useEffect(() => {
     const fetchTurnos = async () => {
       try {
-        const response = await apiRequest(`/api/patients/${id}/appointments`, 'GET', null, token);
+        const paciente = await apiRequest("api/patients/search", "POST", null, token);
+        const listaPacientes = paciente.data
+        
+        const pacienteFiltrado = listaPacientes.find(p => p.user_id === id);
+        console.log('---pacienteFiltrado',pacienteFiltrado);
+        
+
+        const response = await apiRequest(`/api/patients/${pacienteFiltrado.id}/appointments`, 'GET', null, token);
         setTurnos(response.data);
       } catch (error) {
         console.error('Error al traer turnos del paciente:', error);
@@ -26,6 +33,8 @@ export function Turnos() {
     if (id) {
       fetchTurnos();
     }
+    console.log('---turnos',turnos);
+    
   }, [id, token]);
 
   return (
