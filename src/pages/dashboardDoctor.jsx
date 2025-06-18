@@ -6,7 +6,6 @@ export function DashboardDoctors() {
   const storedLastName = localStorage.getItem('userLastName');
   return (
     <PageDoctors>
-        {/* podria ir el nombre del doc */}
       <h1 className="text-center" style={{ color: "black", marginTop: "40px" }}>
         Dashboard Doctor {storedFirstName} {storedLastName}
       </h1>
@@ -23,7 +22,7 @@ export function DashboardDoctors() {
                   
                   
                 ]}
-                links={{ href: "#", text: "Entrar" }}
+                links={[{ href: "#", text: "Entrar" }]}
               />
             </div>
             <div className="col-md-3">
@@ -34,7 +33,7 @@ export function DashboardDoctors() {
                   "Control de turnos asignados"
                  
                 ]}
-                links={{ href: "#", text: "Entrar" }}
+                links={[{ href: "/appoinments-doctors", text: "Entrar" }]}
               />
             </div>
 
