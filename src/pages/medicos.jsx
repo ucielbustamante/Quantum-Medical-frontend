@@ -134,7 +134,7 @@ export function Medicos() {
                   `Matrícula: ${medico.matricula}`,
                   <HorariosDisponibles disponibilidad={medico.disponibilidad} />
                 ]}
-                link={{ href: `/admin/doctors/edit/${medico.id}`, text: "Editar" }}
+                links={{ href: `/admin/doctors/edit/${medico.id}`, text: "Editar" }}
               />
 
             </div>

@@ -55,7 +55,7 @@ export function FindDoctorByEmail() {
                         `DNI: ${doctor.User.dni}`,
                         `Matrícula: ${doctor.license_number}`
                         ]}
-                        link={{
+                        links={{
                         href: `/doctors/${doctor.id}`,
                         text: "Modificar"
                         }}

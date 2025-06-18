@@ -23,7 +23,7 @@ export function DashboardDoctors() {
                   
                   
                 ]}
-                link={{ href: "#", text: "Entrar" }}
+                links={{ href: "#", text: "Entrar" }}
               />
             </div>
             <div className="col-md-3">
@@ -34,7 +34,7 @@ export function DashboardDoctors() {
                   "Control de turnos asignados"
                  
                 ]}
-                link={{ href: "#", text: "Entrar" }}
+                links={{ href: "#", text: "Entrar" }}
               />
             </div>
 
