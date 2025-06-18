@@ -24,7 +24,7 @@ export function Form() {
 
     try {
     const data = await apiRequest('/api/auth/login', 'POST', { email, password });
-
+      
     console.log('Formulario enviado:', { email, password });
 
     console.log('data',data);
@@ -33,7 +33,8 @@ export function Form() {
     localStorage.setItem('rol', data.data.role);
     localStorage.setItem('userName', data.data.name);
     localStorage.setItem('userLastName', data.data.lastname);
-
+    localStorage.setItem('userId', data.data.id);
+    
     console.log('Login y perfil exitoso. Nombre:', data.data.name, 'Apellido:', data.data.lastname);
 
     if (data.data.role === 'Admin') {

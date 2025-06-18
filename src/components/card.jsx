@@ -1,6 +1,7 @@
+import { Link } from "react-router-dom";
 import styles from '../styles/card.module.css'
 
-export function Card({ title, subtitle, content = [], link }) {
+export function Card({ title, subtitle, content = [], links = [] }) {
   return (
     <div className={`position-relative  ${styles.card}`}>
       {title && <h5 className={styles.cardTitle}>{title}</h5>}
@@ -13,10 +14,14 @@ export function Card({ title, subtitle, content = [], link }) {
       ))}
 
 
-      {link && (
-        <a href={link.href} className={styles.cardLink}>
-          {link.text}
-        </a>
+      {links.length > 0 && (
+        <div className={styles.cardLinks}>
+          {links.map((link, index) => (
+            <Link key={index} to={link.href} className={styles.cardLink}>
+              {link.text}
+            </Link>
+          ))}
+        </div>
       )}
     </div>
   )

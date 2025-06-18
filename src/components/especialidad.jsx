@@ -49,7 +49,7 @@ export function Especialidad() {
                 title={item.name}
                 //subtitle=
                 content={[]}
-                link={{
+                links={{
                   href: `/specialities/${item.id}`,
                   text: "Ver más"
                 }}

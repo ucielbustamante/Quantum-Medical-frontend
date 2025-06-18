@@ -20,20 +20,10 @@ export function DashboardAdmin() {
                   "Ver roles asignados",
                   
                 ]}
-                link={{ href: "/users/all-users", text: "Entrar" }}
+                links={[{ href: "/users/all-users", text: "Entrar" }]}
               />
             </div>
-            <div className="col-md-3">
-              <Card
-                title="Turnos"
-                subtitle="Revisión de citas médicas"
-                content={[
-                  "Control de turnos asignados",
-                  "Filtrar por médico o fecha"
-                ]}
-                link={{ href: "/turnos", text: "Entrar" }}
-              />
-            </div>
+           
             <div className="col-md-3">
               <Card
                 title="Pacientes"
@@ -43,7 +33,7 @@ export function DashboardAdmin() {
                   "Historial clinico",
                   
                 ]}
-                link={{ href: "/admin/all-patients", text: "Entrar" }}
+                links={[{ href: "/admin/all-patients", text: "Entrar" }]}
               />
             </div>
             <div className="col-md-3">
@@ -54,7 +44,7 @@ export function DashboardAdmin() {
                   "Ver médicos por especialidad",
                   "Editar, eliminar o inhabilitar médicos"
                 ]}
-                link={{ href: "/medicos", text: "Entrar" }}
+                links={[{ href: "/medicos", text: "Entrar" }]}
               />
             </div>
           

@@ -3,11 +3,11 @@ import { Form } from './components/form';
 import { ForgotPasswordPage } from './pages/forgotPassword';
 import { ResetPasswordForm } from './components/resetPasswordForm';
 import { AdminRoutes } from "./routes/adminRoutes";
-// import { DoctorsRoutes } from './routes/doctorsRoutes';
+import { PublicRoutes } from './routes/publicRoutes';
+import { DoctorsRoutes } from './routes/doctorsRoutes';
 import { DashboardPatients } from './pages/dashboardPatients';
-import { SacarTurno } from "./pages/newAppointment";
-import { MisTurnos } from "./pages/appointmentPatient";
 import { AuthSuccess } from './components/authSuccess';
+import { PatientRoutes } from './routes/patientsRoutes';
 
 function App() {
   return (
@@ -22,15 +22,17 @@ function App() {
 
        {/* Rutas Admin */}
         <>{AdminRoutes()}</>
+        <>{PublicRoutes()}</>
+        <>{PatientRoutes()}</>
+        <>{DoctorsRoutes()}</>
 
         {/* Rutas Doctors */}
         {/* <>{DoctorsRoutes()}</> */}
 
         {/* esta ruta aun no tiene contenido */}
-        <Route path='/patient/dashboard' element={<DashboardPatients />}/>
+        {/* <Route path='/patient/dashboard' element={<DashboardPatients />}/> */}
         {/* para que el paciente saque turno */}
-        <Route path="/newAppointment" element={<SacarTurno />} />
-        <Route path="/mis-turnos" element={<MisTurnos />} />
+        
         
       </Routes>
   </BrowserRouter> )

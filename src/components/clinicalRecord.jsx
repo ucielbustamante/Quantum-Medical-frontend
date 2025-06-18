@@ -5,8 +5,9 @@ import { PageAdmin } from "../components/pageAdmin";
 import { apiRequest } from "../services/apiConection";
 
 
-export function AllPatients() {
+export function ClinicalRecords() {
   const [paciente, setPaciente] = useState([]);
+  const [clinicalHistory, serClinicalHistory] = useState("")
   const [loading, setLoading] = useState(true);
   const [paginaActual, setPaginaActual] = useState(1);
   const [limite] = useState(8);
@@ -34,6 +35,8 @@ export function AllPatients() {
 
         const pacientesTotales = pacientesBrutos.map(paciente => {
         const pacienteId = paciente.id;
+        
+        
         return {
           id: pacienteId,
           nombre: `${paciente.User.name} ${paciente.User.lastname}`,
@@ -108,14 +111,11 @@ export function AllPatients() {
                 subtitle={[`DNI: ${p.dni}`]}
                 content={[
                   `Email: ${p.email}`,
-                  `Fecha Nacimiento: ${p.fecha_nacimineto.split("T")[0]}`,
+                  `Fecha Nacimiento: ${p.fecha_nacimineto}`,
                   `Obra social: ${p.obra_social}`,
                   `Nro obra social: ${p.nro_obra}`
                 ]}
-                links={[
-                  { href: `/admin/patients/edit/${p.id}`, text: "Editar" },
-                  { href: `/admin/patients/${p.id}/turnos`, text: "Ver Turnos" }
-                ]}
+                links={{ href: `/admin/patients/edit/${p.id}`, text: "Editar" }}
               />
 
             </div>

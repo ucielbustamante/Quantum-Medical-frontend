@@ -116,6 +116,7 @@ export function AllUsers() {
                     `DNI: ${user.dni || "N/A"}`,
                   ]}
                   link={{ href: `/admin/users/edit/${user.id}`, text: "Editar" }}
+
                 />
               </div>
             ))

@@ -1,6 +1,6 @@
 import { Route } from "react-router-dom";
 import { PrivateRoute } from "../components/PrivateRoute";
-import { Turnos } from "../pages/turnos";
+import { Turnos } from "../pages/turnosPatientAdmin";
 import { Medicos } from "../pages/medicos";
 import { Especialidad } from "../components/especialidad";
 import { NuevoMedico } from "../pages/newMedic";
@@ -10,13 +10,12 @@ import { AllUsers } from "../pages/allUsers";
 import { NewEspecialty } from "../pages/newEspecialities";
 import { FindDoctorByEmail } from "../components/FindDoctorByEmail";
 import { EditarMedico } from "../pages/editMedic";
-import { AllPatients } from "../pages/allPatients";
 import { NewPatient } from "../pages/newPatients";
+import { EditPatient } from "../pages/editPatient";
 
 export function AdminRoutes() {
   return (
     <>
-      <Route path="/turnos" element={<Turnos />} />
       <Route path="/medicos" element={<Medicos />} />
       <Route path="/especialidad" element={<Especialidad />} />
       <Route path="/formulario-medico" element={<NuevoMedico />} />
@@ -49,15 +48,6 @@ export function AdminRoutes() {
       />
 
       <Route
-        path="/admin/all-patients"
-        element={
-          <PrivateRoute allowedRoles={["Admin"]}>
-            <AllPatients />
-          </PrivateRoute>
-        }
-      />
-
-      <Route
         path="/admin/new-patient"
         element={
           <PrivateRoute allowedRoles={["Admin"]}>
@@ -67,7 +57,24 @@ export function AdminRoutes() {
       
       />
 
+      <Route 
+        path="/admin/patients/edit/:id"
+        element={
+          <PrivateRoute allowedRoles={["Admin"]}>
+            <EditPatient />
+          </PrivateRoute>
+        }
+      />
 
+      <Route 
+        path="/admin/patients/:id/turnos"
+        element={
+          <PrivateRoute allowedRole={["Admin"]}>
+            <Turnos />
+          </PrivateRoute>
+        }
+      />
+      
       <Route 
         path="/admin/doctors/edit/:id"
         element={
@@ -76,7 +83,6 @@ export function AdminRoutes() {
           </PrivateRoute>
         }
       />
-
 
       <Route
         path="/specialities"
