@@ -78,6 +78,15 @@ export function AdminRoutes() {
       />
 
       <Route 
+        path="/admin/patients/:id/turnos"
+        element={
+          <PrivateRoute allowedRole={["Admin"]}>
+            <Turnos />
+          </PrivateRoute>
+        }
+      />
+      
+      <Route 
         path="/admin/doctors/edit/:id"
         element={
           <PrivateRoute allowedRole={["Admin"]}>
@@ -85,7 +94,6 @@ export function AdminRoutes() {
           </PrivateRoute>
         }
       />
-
 
       <Route
         path="/specialities"

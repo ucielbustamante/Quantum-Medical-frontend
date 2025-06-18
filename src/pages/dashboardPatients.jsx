@@ -16,7 +16,7 @@ export function DashboardPatients() {
                 title="Mis Turnos"
                 subtitle="Revisión de mis citas médicas"
                 content={[]}
-                link={{ href: "/mis-turnos", text: "Entrar" }}
+                links={{ href: "/mis-turnos", text: "Entrar" }}
               />
             </div>
             <div className="col-md-3">
@@ -24,7 +24,7 @@ export function DashboardPatients() {
                 title="Sacar Turno"
                 subtitle="Sacar turno para la especialidad deseada"
                 content={[]}
-                link={{ href: "/appointment", text: "Entrar" }}
+                links={{ href: "/appointment", text: "Entrar" }}
               />
             </div>
           

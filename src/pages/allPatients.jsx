@@ -112,7 +112,10 @@ export function AllPatients() {
                   `Obra social: ${p.obra_social}`,
                   `Nro obra social: ${p.nro_obra}`
                 ]}
-                link={{ href: `/admin/patients/edit/${p.id}`, text: "Editar" }}
+                links={[
+                  { href: `/admin/patients/edit/${p.id}`, text: "Editar" },
+                  { href: `/admin/patients/${p.id}/turnos`, text: "Ver Turnos" }
+                ]}
               />
 
             </div>

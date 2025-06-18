@@ -1,47 +1,48 @@
-import { Card } from "../components/card"
-import styles from '../styles/turnos.module.css'
-import { PagePatients } from "../components/pagePatients"
+import { useEffect, useState } from "react";
+import { Card } from "../components/card";
+import styles from '../styles/turnos.module.css';
+import { PagePatients } from "../components/pagePatients";
+import { apiRequest } from "../services/apiConection";
 
-export function MisTurnos() {
-  // Simular paciente logueado
-  const pacienteLogueado = "Juan Pérez"
+export function Appointments() {
+  const [turnos, setTurnos] = useState([]);
+  const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("userId")
 
-  const turnosEjemplo = [
-    {
-      paciente: "Juan Pérez",
-      especialidad: "Cardiología",
-      fecha: "24/05/2025",
-      hora: "10:30 AM",
-      medico: "Dr. Gómez",
-    },
-    {
-      paciente: "Ana López",
-      especialidad: "Dermatología",
-      fecha: "25/05/2025",
-      hora: "14:00 PM",
-      medico: "Dra. Suárez",
-    },
-  ]
+  
+  useEffect(() => {
+    const fetchTurnos = async () => {
+      try {
+        //me falta conseguir el id del paciente, porque pensaba usar el userId para buscar
+       // en pacientes y obtener el id, pero solo puede ingresar admin
+        const response = await apiRequest(`/api/patients/:idPatient/appointments`, "GET", null, token);
+        setTurnos(response.data || []);
+        console.log("---turnosPaciente", response.data);
+      } catch (error) {
+        console.error("Error al obtener los turnos del paciente:", error);
+      }
+    };
 
-  const turnosDelPaciente = turnosEjemplo.filter(
-    (turno) => turno.paciente === pacienteLogueado
-  )
+    if ( token) {
+      fetchTurnos();
+    }
+  }, [ token]);
 
   return (
     <PagePatients>
       <h1 className={styles.title}>Mis Turnos</h1>
 
       <div className={styles.container}>
-        {turnosDelPaciente.length > 0 ? (
+        {turnos.length > 0 ? (
           <div className={styles.gridContainer}>
-            {turnosDelPaciente.map((turno, index) => (
+            {turnos.map((turno, index) => (
               <Card
                 key={index}
-                title={`Especialidad: ${turno.especialidad}`}
-                subtitle={`Médico: ${turno.medico}`}
+                title={`Especialidad: ${turno.Doctor.Specialties[0]?.name || "Sin asignar"}`}
+                subtitle={`Médico: ${turno.Doctor.User.name} ${turno.Doctor.User.lastname}`}
                 content={[
-                  `Fecha: ${turno.fecha}`,
-                  `Hora: ${turno.hora}`
+                  `Fecha: ${turno.date}`,
+                  `Hora: ${turno.start_time} - ${turno.end_time}`
                 ]}
               />
             ))}
@@ -51,5 +52,5 @@ export function MisTurnos() {
         )}
       </div>
     </PagePatients>
-  )
+  );
 }
