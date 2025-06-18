@@ -1,6 +1,6 @@
 import { Route } from "react-router-dom";
 import { PrivateRoute } from "../components/PrivateRoute";
-import { Turnos } from "../pages/turnos";
+import { Turnos } from "../pages/turnosPatientAdmin";
 import { Medicos } from "../pages/medicos";
 import { Especialidad } from "../components/especialidad";
 import { NuevoMedico } from "../pages/newMedic";

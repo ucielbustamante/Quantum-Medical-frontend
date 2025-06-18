@@ -108,7 +108,7 @@ export function AllPatients() {
                 subtitle={[`DNI: ${p.dni}`]}
                 content={[
                   `Email: ${p.email}`,
-                  `Fecha Nacimiento: ${p.fecha_nacimineto}`,
+                  `Fecha Nacimiento: ${p.fecha_nacimineto.split("T")[0]}`,
                   `Obra social: ${p.obra_social}`,
                   `Nro obra social: ${p.nro_obra}`
                 ]}
