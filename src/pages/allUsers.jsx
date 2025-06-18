@@ -53,7 +53,7 @@ export function AllUsers() {
                   title={`${user.name} ${user.lastname}`}
                   subtitle={`Rol: ${user.role}`}
                   content={[`Email: ${user.email}`]}
-                  link={{ href: `/users/${user.id}`, text: "Editar" }}
+                  links={{ href: `/users/${user.id}`, text: "Editar" }}
                 />
               </div>
             ))}
