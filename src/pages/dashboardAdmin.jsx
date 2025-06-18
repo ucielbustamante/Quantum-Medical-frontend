@@ -23,17 +23,7 @@ export function DashboardAdmin() {
                 links={[{ href: "/users/all-users", text: "Entrar" }]}
               />
             </div>
-            <div className="col-md-3">
-              <Card
-                title="Turnos"
-                subtitle="Revisión de citas médicas"
-                content={[
-                  "Control de turnos asignados",
-                  "Filtrar por médico o fecha"
-                ]}
-                links={[{ href: "/turnos", text: "Entrar" }]}
-              />
-            </div>
+           
             <div className="col-md-3">
               <Card
                 title="Pacientes"

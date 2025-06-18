@@ -16,7 +16,6 @@ import { EditPatient } from "../pages/editPatient";
 export function AdminRoutes() {
   return (
     <>
-      <Route path="/turnos" element={<Turnos />} />
       <Route path="/medicos" element={<Medicos />} />
       <Route path="/especialidad" element={<Especialidad />} />
       <Route path="/formulario-medico" element={<NuevoMedico />} />
