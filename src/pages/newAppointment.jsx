@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { FormGenerico } from "../components/formGenerico";
-import { PageLayout } from "../components/pageLayouts";
+import { PagePatients } from "../components/pagePatients";
 import { apiRequest } from "../services/apiConection";
+import { useNavigate } from "react-router-dom"
 
 //la idea era usar dayjs, pero no puedo instalarlo
 function generarHorarios(startStr, endStr, duracionMin) {
@@ -33,6 +34,7 @@ function generarHorarios(startStr, endStr, duracionMin) {
 }
 
 export function NewAppointment() {
+  const navigate = useNavigate()
   const [especialidades, setEspecialidades] = useState([]);
   const [medicos, setMedicos] = useState([]);
   const [horarios, setHorarios] = useState([]);
@@ -149,7 +151,12 @@ export function NewAppointment() {
       setEspecialidadSeleccionada("");
       setMedicoSeleccionado("");
       setHorarioSeleccionado("");
-      setFechaSeleccionada(""); 
+      setFechaSeleccionada("");
+
+      setTimeout(() => {
+        navigate("/patient/dashboard")
+      }, 2000)
+
     } catch (err) {
       console.error("Error al reservar turno", err);
       alert("Ocurrió un error al reservar el turno.");
@@ -188,13 +195,13 @@ export function NewAppointment() {
   ];
 
   return (
-    <PageLayout>
+    <PagePatients>
       <FormGenerico
         campos={campos}
         onSubmit={handleSubmit}
         titulo="Reservar turno médico"
         botonTexto="Reservar"
       />
-    </PageLayout>
+    </PagePatients>
   );
 }
