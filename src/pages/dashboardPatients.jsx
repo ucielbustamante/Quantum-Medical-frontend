@@ -24,7 +24,7 @@ export function DashboardPatients() {
                 title="Sacar Turno"
                 subtitle="Sacar turno para la especialidad deseada"
                 content={[]}
-                link={{ href: "/newAppointment", text: "Entrar" }}
+                link={{ href: "/appointment", text: "Entrar" }}
               />
             </div>
           
