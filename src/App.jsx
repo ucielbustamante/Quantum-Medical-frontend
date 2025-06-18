@@ -4,7 +4,7 @@ import { ForgotPasswordPage } from './pages/forgotPassword';
 import { ResetPasswordForm } from './components/resetPasswordForm';
 import { AdminRoutes } from "./routes/adminRoutes";
 import { PublicRoutes } from './routes/publicRoutes';
-// import { DoctorsRoutes } from './routes/doctorsRoutes';
+import { DoctorsRoutes } from './routes/doctorsRoutes';
 import { DashboardPatients } from './pages/dashboardPatients';
 import { PatientRoutes } from './routes/patientsRoutes';
 
@@ -22,12 +22,13 @@ function App() {
         <>{AdminRoutes()}</>
         <>{PublicRoutes()}</>
         <>{PatientRoutes()}</>
+        <>{DoctorsRoutes()}</>
 
         {/* Rutas Doctors */}
         {/* <>{DoctorsRoutes()}</> */}
 
         {/* esta ruta aun no tiene contenido */}
-        <Route path='/patient/dashboard' element={<DashboardPatients />}/>
+        {/* <Route path='/patient/dashboard' element={<DashboardPatients />}/> */}
         {/* para que el paciente saque turno */}
         
         

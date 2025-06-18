@@ -4,34 +4,6 @@ import { PagePatients } from "../components/pagePatients";
 import { apiRequest } from "../services/apiConection";
 import { useNavigate } from "react-router-dom"
 
-//la idea era usar dayjs, pero no puedo instalarlo
-function generarHorarios(startStr, endStr, duracionMin) {
-  const horarios = [];
-
-  const [startH, startM] = startStr.split(":").map(Number);
-  const [endH, endM] = endStr.split(":").map(Number);
-
-  const startDate = new Date(0, 0, 0, startH, startM);
-  const endDate = new Date(0, 0, 0, endH, endM);
-
-  while (startDate < endDate) {
-    const siguiente = new Date(startDate.getTime() + duracionMin * 60000);
-
-    if (siguiente > endDate) break;
-
-    const formato = (n) => n.toString().padStart(2, "0");
-
-    horarios.push({
-      start_time: `${formato(startDate.getHours())}:${formato(startDate.getMinutes())}:00`,
-      end_time: `${formato(siguiente.getHours())}:${formato(siguiente.getMinutes())}:00`,
-      label: `${formato(startDate.getHours())}:${formato(startDate.getMinutes())} - ${formato(siguiente.getHours())}:${formato(siguiente.getMinutes())}`
-    });
-
-    startDate.setMinutes(startDate.getMinutes() + duracionMin);
-  }
-
-  return horarios;
-}
 
 export function NewAppointment() {
   const navigate = useNavigate()
@@ -90,53 +62,63 @@ export function NewAppointment() {
   }, [especialidadSeleccionada]);
 
   useEffect(() => {
-    const fetchHorarios = async () => {
-      if (!medicoSeleccionado) {
+  const fetchHorarios = async () => {
+    console.log('----medicoSeleccionado ',medicoSeleccionado);
+    
+    if (!medicoSeleccionado) {
+      setHorarios([]);
+      return;
+    }
+
+    try {
+      const fecha = new Date(fechaSeleccionada);
+      const diaSemana = fecha.getDay();
+      console.log('---fecha',fecha);
+      console.log('---fechas seleccionada', fechaSeleccionada);
+      
+      
+      const disponibilidadResponse = await apiRequest("/api/availability", "GET", null, token);
+      const disponibilidadFiltrada = disponibilidadResponse.data.filter(
+        (item) => item.Doctor?.id === medicoSeleccionado && item.weekday === diaSemana
+      );
+      console.log('---disponibilidadResponse',disponibilidadResponse);
+      
+      if (disponibilidadFiltrada.length === 0) {
         setHorarios([]);
-        return;
+        return; 
       }
 
-      try {
-        const diasSemana = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
-        
-        const result = await apiRequest("/api/availability", "GET", null, token);
-        const disponibilidadFiltrada = result.data.filter((item) => item.Doctor?.id === medicoSeleccionado);
-       
-        const diaSemanaSeleccionado = new Date(fechaSeleccionada).getDay();
+      const slotsResponse = await apiRequest(
+        `/api/doctors/${medicoSeleccionado}/available-slots?startDate=${fechaSeleccionada}&endDate=${fechaSeleccionada}`,
+        "GET",
+        null,
+        token
+      );
 
-        const horariosFormateados = [];
-        disponibilidadFiltrada.forEach((item) => {
-          if (item.weekday !== diaSemanaSeleccionado) return;
+      const turnosDisponibles = slotsResponse.data || [];
+      console.log('--turnosDisponibles',turnosDisponibles);
+      
+      const horariosFormateados = turnosDisponibles.map((turno) => ({
+        value: JSON.stringify({
+          start_time: turno.start_time,
+          end_time: turno.end_time,
+        }),
+        label: `${turno.start_time.slice(0, 5)} - ${turno.end_time.slice(0, 5)} (${turno.duration_minutes} min)`,
+      }));
 
-          const turnos = generarHorarios(item.start_time, item.end_time, item.slot_duration_min);
+      setHorarios(horariosFormateados);
+    } catch (err) {
+      console.error("Error al obtener horarios", err);
+    }
+  };
 
-          turnos.forEach((t) => {
-            horariosFormateados.push({
-              value: JSON.stringify({
-                start_time: t.start_time,
-                end_time: t.end_time,
-              }),
-              label: t.label,
-            });
-          });
-        })
+  fetchHorarios();
+}, [medicoSeleccionado, fechaSeleccionada]);
 
-        setHorarios(horariosFormateados);
-
-
-      } catch (err) {
-        console.error("Error al obtener horarios", err);
-      }
-    };
-
-    fetchHorarios();
-  }, [medicoSeleccionado, fechaSeleccionada]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!fechaSeleccionada) return alert("Debe seleccionar una fecha");
-    if (!horarioSeleccionado) return alert("Debe seleccionar un horario");
 
     try {
       const horario = JSON.parse(horarioSeleccionado);
