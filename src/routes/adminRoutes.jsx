@@ -145,7 +145,7 @@ export function AdminRoutes() {
       />
 
       <Route
-        path="/admin/clinical-records/:id"
+        path="/admin/clinical-records/:recordId"
         element={
           <PrivateRoute allowedRoles={["Admin", "Doctor"]}>
             <ViewClinicalRecord />
