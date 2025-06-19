@@ -126,7 +126,7 @@ export function NewAppointment() {
           label: appointmentService.formatTimeSlot(
             turno.start_time, 
             turno.end_time, 
-            turno.duration_minutes
+            turno.slot_duration_min
           ),
         }));
 
