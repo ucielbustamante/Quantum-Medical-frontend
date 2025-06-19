@@ -22,7 +22,7 @@ export function DashboardDoctors() {
                   
                   
                 ]}
-                links={[{ href: "#", text: "Entrar" }]}
+                links={[{ href: "/users/all-users", text: "Entrar" }]}
               />
             </div>
             <div className="col-md-3">
