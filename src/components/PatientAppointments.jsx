@@ -152,7 +152,7 @@ const PatientAppointments = ({ patientId }) => {
             }}>
               <div>
                 <h4 style={{ margin: '0 0 10px 0', color: '#2c3e50' }}>
-                  Dr. {appointment.Doctor?.User?.name} {appointment.Doctor?.User?.lastname}
+                  {appointment.Doctor?.User?.name} {appointment.Doctor?.User?.lastname}
                 </h4>
                 <p style={{ margin: '5px 0', color: '#7f8c8d' }}>
                   <strong>Fecha:</strong> {formatDate(appointment.date)}
