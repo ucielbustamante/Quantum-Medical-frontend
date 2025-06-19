@@ -14,7 +14,7 @@ export const appointmentService = {
   getAvailableSlots: async (doctorId, startDate, endDate) => {
     const token = localStorage.getItem('token');
     return await apiRequest(
-      `/api/doctors/${doctorId}/available-slots?startDate=${startDate}&endDate=${endDate}`,
+      `/api/doctors/${doctorId}/availability?startDate=${startDate}&endDate=${endDate}`,
       'GET',
       null,
       token
